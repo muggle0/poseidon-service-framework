@@ -1,4 +1,4 @@
-package com.psf;
+package com.muggle;
 
 import java.util.List;
 import java.util.Map;

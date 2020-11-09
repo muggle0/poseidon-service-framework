@@ -1,4 +1,4 @@
-package com.psf;
+package com.muggle;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
@@ -129,12 +129,12 @@ public class SimpleCodeGenerator extends CodeGenerator {
         tableMessage.setSwagger(true);
         tableMessage.setTableName(Arrays.asList("oa_dept"));
         tableMessage.setAuthor("muggle");
-        tableMessage.setParentPack("com.psf");
-        tableMessage.setProjectPackage("com.psf");
+        tableMessage.setParentPack("com.muggle");
+        tableMessage.setProjectPackage("com.muggle");
         tableMessage.setDriver("com.mysql.jdbc.Driver");
         tableMessage.setJdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC");
         tableMessage.setModule("user");
-        tableMessage.setPerfix("psf-generator");
+        tableMessage.setPerfix("muggle-generator");
         tableMessage.setPassword("root");
         tableMessage.setSwagger(true);
         SimpleCodeGenerator simpleCodeGeneratorTemplate = new SimpleCodeGenerator(tableMessage);
