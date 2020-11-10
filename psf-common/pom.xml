@@ -21,6 +21,11 @@
             <artifactId>pagehelper</artifactId>
             <version>5.1.11</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>ding-sdk</artifactId>
+            <version>1</version>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
