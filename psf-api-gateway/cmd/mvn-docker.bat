@@ -1,0 +1,1 @@
+cd .. && mvn package org.springframework.boot:spring-boot-maven-plugin:2.1.8.RELEASE:build-info dockerfile:build

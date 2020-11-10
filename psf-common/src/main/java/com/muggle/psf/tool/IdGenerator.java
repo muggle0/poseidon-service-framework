@@ -1,4 +1,4 @@
-package com.muggle.psf.util;
+package com.muggle.psf.tool;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * @create: 2019-11-25
  **/
 
-public abstract class PoseidonIdGenerator {
+public abstract class IdGenerator {
 
 
     /**
@@ -60,7 +60,7 @@ public abstract class PoseidonIdGenerator {
     public abstract List<String> getBatchSerialNumber(String perfix, String mark, int length,int size);
 
     //
-    public PoseidonIdGenerator(long datacenterId, long machineId) {
+    public IdGenerator(long datacenterId, long machineId) {
         if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {
             throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
         }
