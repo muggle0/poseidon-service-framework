@@ -4,10 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.muggle</groupId>
+        <artifactId>psf-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <groupId>com.muggle</groupId>
     <artifactId>psf-utils</artifactId>
     <version>1.0-SNAPSHOT</version>
-
+    <name>psf util</name>
+    <description>poseidon service framework util</description>
     <dependencies>
         <dependency>
             <groupId>cn.hutool</groupId>
