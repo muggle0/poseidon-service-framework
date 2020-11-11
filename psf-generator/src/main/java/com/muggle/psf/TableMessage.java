@@ -24,7 +24,7 @@ public class TableMessage {
     /**模块名*/
     private String module;
 
-    private String perfix;
+    private String perfix="";
 
     private String projectPackage;
 
