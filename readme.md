@@ -11,7 +11,10 @@
 - psf-api-gateway
 - psf-log
 - psf-dfs
-- psf-
+
+## 开发的宗旨
+
+当组件开发完成之后，参数修改不应该去修改源码 应该通过某个脚本或者操作界面去修改参数
 
 ## psf-api-gateway
 
@@ -26,3 +29,4 @@ https://www.firegod.cn/2019/01/%E9%98%BF%E9%87%8C%E4%BA%91%E5%85%8D%E8%B4%B9%E7%
 psf197733
 https://cr.console.aliyun.com/cn-hangzhou/instances/repositories
 https://www.cnblogs.com/jinjian91/p/11349453.html
+
