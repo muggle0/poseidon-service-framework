@@ -30,3 +30,4 @@ psf197733
 https://cr.console.aliyun.com/cn-hangzhou/instances/repositories
 https://www.cnblogs.com/jinjian91/p/11349453.html
 
+配置带默认值，当部署的时候通过外部传参部署
