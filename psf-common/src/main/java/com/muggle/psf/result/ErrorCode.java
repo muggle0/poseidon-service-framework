@@ -5,5 +5,5 @@ package com.muggle.psf.result;
  * @Author: muggle
  * @Date: 2020/11/9
  **/
-public enum  ErrorCodeEnum {
+public class ErrorCode {
 }
