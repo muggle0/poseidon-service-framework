@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,8 +20,12 @@ import java.util.List;
  **/
 
 public class SimpleCodeGenerator extends CodeGenerator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleCodeGenerator.class);
+
     public SimpleCodeGenerator(TableMessage message) {
         super(message);
+        LOGGER.info("==========> [启动代码模板生成器，注意如果数据库无该表则不生成对应的类]");
     }
 
     @Override
@@ -27,8 +33,9 @@ public class SimpleCodeGenerator extends CodeGenerator {
 
     }
 
+
     @Override
-    DataSourceConfig configDesc(TableMessage message) {
+    DataSourceConfig configDataSource(TableMessage message) {
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(message.getJdbcUrl());
         // dsc.setSchemaName("public");
@@ -43,7 +50,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
     GlobalConfig configGlobal(TableMessage message) {
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath+"/"+message.getPerfix()+ "/src/main/java");
+        gc.setOutputDir(projectPath+"/"+message.getModule()+ "/src/main/java");
         gc.setAuthor(message.getAuthor());
         gc.setOpen(false);
         // 实体属性 Swagger2 注解
@@ -56,13 +63,13 @@ public class SimpleCodeGenerator extends CodeGenerator {
     @Override
     PackageConfig configPc(TableMessage message) {
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName(message.getModule());
+        pc.setModuleName(message.getSuffix());
         pc.setParent(message.getProjectPackage());
         return pc;
     }
 
     @Override
-    InjectionConfig config(final TableMessage message) {
+    InjectionConfig fileConfig(final TableMessage message) {
         InjectionConfig injectionConfig = new InjectionConfig() {
             @Override
             public void initMap() {
@@ -75,7 +82,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return System.getProperty("user.dir")+"/"+message.getPerfix() + "/src/main/resources/mapper/" + message.getModule()
+                return System.getProperty("user.dir")+"/"+message.getModule() + "/src/main/resources/mapper/" + message.getSuffix()
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
@@ -119,7 +126,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
         tableName.toArray(strings);
         strategy.setInclude(strings);
         strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix(message.getModule() + "_");
+        strategy.setTablePrefix(message.getSuffix() + "_");
         return strategy;
     }
 
@@ -127,17 +134,20 @@ public class SimpleCodeGenerator extends CodeGenerator {
         TableMessage tableMessage = new TableMessage();
         tableMessage.setUsername("root");
         tableMessage.setSwagger(true);
-        tableMessage.setTableName(Arrays.asList("oa_dept"));
+        tableMessage.setTableName(Arrays.asList("oa_url_info"));
         tableMessage.setAuthor("muggle");
-        tableMessage.setParentPack("com.muggle");
+        tableMessage.setParentPack("xxxx");
         tableMessage.setProjectPackage("com.muggle");
         tableMessage.setDriver("com.mysql.jdbc.Driver");
         tableMessage.setJdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC");
-        tableMessage.setModule("user");
-        tableMessage.setPerfix("muggle-generator");
+        tableMessage.setSuffix("user");
+        tableMessage.setModule("muggle-generator");
         tableMessage.setPassword("root");
         tableMessage.setSwagger(true);
         SimpleCodeGenerator simpleCodeGeneratorTemplate = new SimpleCodeGenerator(tableMessage);
         simpleCodeGeneratorTemplate.createCode();
+
+        // 生成配置类
+        simpleCodeGeneratorTemplate.createProjectConfig(tableMessage);
     }
 }

@@ -21,13 +21,19 @@ public class TableMessage {
     /** 数据库连接*/
     private String jdbcUrl;
 
-    /**模块名*/
-    private String module;
+    /**包后缀*/
+    private String suffix;
 
-    private String perfix="";
+    /**
+     * 项目模块名
+     */
+    private String module ="";
 
     private String projectPackage;
 
+    /**
+     * 是否生成swagger 注解
+     */
     private boolean swagger;
 
     private String author;
@@ -39,6 +45,8 @@ public class TableMessage {
     private Map<String ,String> otherField;
 
     private String parentPack;
+
+    private String initType;
 
 
     public String getPassword() {
@@ -65,12 +73,12 @@ public class TableMessage {
         this.jdbcUrl = jdbcUrl;
     }
 
-    public String getModule() {
-        return module;
+    public String getSuffix() {
+        return suffix;
     }
 
-    public void setModule(String module) {
-        this.module = module;
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 
     public String getAuthor() {
@@ -121,12 +129,12 @@ public class TableMessage {
         this.parentPack = parentPack;
     }
 
-    public String getPerfix() {
-        return perfix;
+    public String getModule() {
+        return module;
     }
 
-    public void setPerfix(String perfix) {
-        this.perfix = perfix;
+    public void setModule(String module) {
+        this.module = module;
     }
 
     public String getProjectPackage() {
