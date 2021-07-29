@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.HashMap;
 
 /**
  * Description
@@ -70,20 +70,26 @@ public class CodeFactory {
     }
 
     private static void createMainClass(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
-        File file = new File(filePath + "/mainClass.xml.ftl");
+        File file = new File(filePath + "/mainClass.java.ftl");
         if (!file.exists()) {
-            throw new IllegalStateException("未找到文件 mainClass.xml.ftl");
+            throw new IllegalStateException("未找到文件 mainClass.java.ftl");
         }
-        Template template = cfg.getTemplate("mainClass.xml.ftl");
+        Template template = cfg.getTemplate("mainClass.java.ftl");
         StringBuilder path = new StringBuilder();
         path.append(System.getProperty("user.dir")).append("/");
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
             path.append(projectMessage.getModule()).append("/");
         }
-        path.append(projectMessage.getProjectPackage());
-        path.append("pom.xml");
+        path.append("/src/main/java/");
+        path.append(projectMessage.getProjectPackage().replace(".","/")).append("/");
+        String module = projectMessage.getModule();
+        String className = underline2Camel(module, true);
+
+        path.append(className).append("Application").append(".java");
         Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
-        template.process(projectMessage,out);
+        HashMap<String, String> model = new HashMap<>();
+        model.put("className",className.concat("Application"));
+        template.process(model,out);
     }
 
     private static void createBanner(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException {
@@ -157,5 +163,47 @@ public class CodeFactory {
 
     public void projectInit(){
 
+    }
+
+    private static String underline2Camel(String line, boolean ... firstIsUpperCase) {
+        String str = "";
+
+        if(StringUtils.isBlank(line)){
+            return str;
+        } else {
+            StringBuilder sb = new StringBuilder();
+            String [] strArr;
+            if(!line.contains("-") && firstIsUpperCase.length == 0){
+                sb.append(line.substring(0, 1).toLowerCase()).append(line.substring(1));
+                str = sb.toString();
+            } else if (!line.contains("-") && firstIsUpperCase.length != 0){
+                if (!firstIsUpperCase[0]) {
+                    sb.append(line.substring(0, 1).toLowerCase()).append(line.substring(1));
+                    str = sb.toString();
+                } else {
+                    sb.append(line.substring(0, 1).toUpperCase()).append(line.substring(1));
+                    str = sb.toString();
+                }
+            } else if (line.contains("-") && firstIsUpperCase.length == 0) {
+                strArr = line.split("-");
+                for (String s : strArr) {
+                    sb.append(s.substring(0, 1).toUpperCase()).append(s.substring(1));
+                }
+                str = sb.toString();
+                str = str.substring(0, 1).toLowerCase() + str.substring(1);
+            } else if (line.contains("-") && firstIsUpperCase.length != 0) {
+                strArr = line.split("-");
+                for (String s : strArr) {
+                    sb.append(s.substring(0, 1).toUpperCase()).append(s.substring(1));
+                }
+                if (!firstIsUpperCase[0]) {
+                    str = sb.toString();
+                    str = str.substring(0, 1).toLowerCase() + str.substring(1);
+                } else {
+                    str = sb.toString();
+                }
+            }
+        }
+        return str;
     }
 }
