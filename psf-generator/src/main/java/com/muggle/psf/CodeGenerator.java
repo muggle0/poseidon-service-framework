@@ -108,33 +108,5 @@ public abstract class CodeGenerator {
 
     }
 
-    public void createProjectConfig(TableMessage tableMessage) {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>>> 生成项目配置文件 <<<<<<<<<<<<<<<<<");
-        Configuration cfg =new Configuration(Configuration.VERSION_2_3_28);
-        Template template = null;
-        Writer out = null;
-
-        try {
-            cfg.setDirectoryForTemplateLoading(new File(SimpleCodeGenerator.class.getClassLoader().getResource("template/").getFile()));
-            cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
-            template = cfg.getTemplate("webConfig.java.ftl");
-            Template pom = cfg.getTemplate("pom.ftl");
-            String fileName ="demo.java";
-            String path = System.getProperty("user.dir") + "/" + message.getModule() + "/src/main/java/"
-                + tableMessage.getProjectPackage().replace(".", "/") + "/config/";
-            File dir = new File(path);
-            if (!dir.exists()){
-                dir.mkdirs();
-            }
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path+"/webConfig.java"))));
-            // 输出文件
-            template.process(tableMessage, out);
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error("读取模板异常",e);
-        } catch (TemplateException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
