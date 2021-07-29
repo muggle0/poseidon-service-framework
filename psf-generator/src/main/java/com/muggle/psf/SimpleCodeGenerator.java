@@ -130,24 +130,23 @@ public class SimpleCodeGenerator extends CodeGenerator {
         return strategy;
     }
 
-    public static void main(String[] args) {
-        TableMessage tableMessage = new TableMessage();
-        tableMessage.setUsername("root");
-        tableMessage.setSwagger(true);
-        tableMessage.setTableName(Arrays.asList("oa_url_info"));
-        tableMessage.setAuthor("muggle");
-        tableMessage.setParentPack("xxxx");
-        tableMessage.setProjectPackage("com.muggle");
-        tableMessage.setDriver("com.mysql.jdbc.Driver");
-        tableMessage.setJdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC");
-        tableMessage.setSuffix("user");
-        tableMessage.setModule("muggle-generator");
-        tableMessage.setPassword("root");
-        tableMessage.setSwagger(true);
-        SimpleCodeGenerator simpleCodeGeneratorTemplate = new SimpleCodeGenerator(tableMessage);
-        simpleCodeGeneratorTemplate.createCode();
-
-        // 生成配置类
-        simpleCodeGeneratorTemplate.createProjectConfig(tableMessage);
-    }
+//    public static void main(String[] args) {
+//        TableMessage tableMessage = new TableMessage();
+//        tableMessage.setUsername("root");
+//        tableMessage.setSwagger(true);
+//        tableMessage.setTableName(Arrays.asList("oa_url_info"));
+//        tableMessage.setAuthor("muggle");
+//        tableMessage.setParentPack("xxxx");
+//        tableMessage.setProjectPackage("com.muggle");
+//        tableMessage.setDriver("com.mysql.jdbc.Driver");
+//        tableMessage.setJdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC");
+//        tableMessage.setSuffix("user");
+//        tableMessage.setModule("muggle-generator");
+//        tableMessage.setPassword("root");
+//        tableMessage.setSwagger(true);
+//        SimpleCodeGenerator simpleCodeGeneratorTemplate = new SimpleCodeGenerator(tableMessage);
+//        simpleCodeGeneratorTemplate.createCode();
+//        // 生成配置类
+//        simpleCodeGeneratorTemplate.createProjectConfig(tableMessage);
+//    }
 }

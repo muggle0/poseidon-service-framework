@@ -1,5 +1,7 @@
 package com.muggle.psf;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -12,22 +14,34 @@ import java.util.Map;
 
 public class TableMessage {
 
-    /** 数据库密码*/
+    private TableMessage() {
+
+    }
+
+    /**
+     * 数据库密码
+     */
     private String password;
 
-    /** 资料库用户名*/
+    /**
+     * 资料库用户名
+     */
     private String username;
 
-    /** 数据库连接*/
+    /**
+     * 数据库连接
+     */
     private String jdbcUrl;
 
-    /**包后缀*/
+    /**
+     * 包后缀
+     */
     private String suffix;
 
     /**
      * 项目模块名
      */
-    private String module ="";
+    private String module = "";
 
     private String projectPackage;
 
@@ -42,11 +56,60 @@ public class TableMessage {
 
     private String driver;
 
-    private Map<String ,String> otherField;
+    private Map<String, String> otherField;
 
     private String parentPack;
 
-    private String initType;
+    /**
+     * 初始化类型，标准，简化，全部
+     */
+    private InitType initType;
+
+    public static TableMessageBuilder builder() {
+        return new TableMessageBuilder();
+    }
+
+    public InitType getInitType() {
+        return initType;
+    }
+
+    public void setInitType(InitType initType) {
+        this.initType = initType;
+    }
+
+    public static enum InitType {
+        NORMAL, SIMPLE, ALL
+    }
+
+    public static class TableMessageBuilder {
+        private TableMessage tableMessage;
+
+        public TableMessageBuilder() {
+            this.tableMessage = new TableMessage();
+        }
+
+        public TableMessage build() {
+            if (StringUtils.isEmpty(tableMessage.getAuthor())) {
+                throw new IllegalArgumentException("请设置作者 Author");
+            }
+            if (StringUtils.isEmpty(tableMessage.getDriver())) {
+                throw new IllegalArgumentException("请设置数据库驱动 driver");
+            }
+            if (StringUtils.isEmpty(tableMessage.getJdbcUrl())) {
+                throw new IllegalArgumentException("请设置url链接 jdbcUrl");
+            }
+            if (tableMessage.getModule() == null) {
+                tableMessage.setModule("");
+            }
+            if (tableMessage.getTableName() == null || tableMessage.getTableName().size() < 1) {
+                throw new IllegalArgumentException("请设置表名 jdbcUrl");
+            }
+            if (tableMessage.getInitType()==null){
+                tableMessage.setInitType(InitType.SIMPLE);
+            }
+            return tableMessage;
+        }
+    }
 
 
     public String getPassword() {
