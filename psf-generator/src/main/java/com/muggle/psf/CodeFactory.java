@@ -14,7 +14,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Description
@@ -50,8 +52,6 @@ public class CodeFactory {
 
     private static void doNormal(ProjectMessage tableMessage) {
         Configuration cfg =new Configuration(Configuration.VERSION_2_3_28);
-        Template template = null;
-        Writer out = null;
         try {
             String filePath = SimpleCodeGenerator.class.getClassLoader().getResource("template/").getFile();
             cfg.setDirectoryForTemplateLoading(new File(filePath));
@@ -158,17 +158,61 @@ public class CodeFactory {
     }
 
     private static void doAll(ProjectMessage projectMessage) {
+        doNormal(projectMessage);
+        String filePath = SimpleCodeGenerator.class.getClassLoader().getResource("others/").getFile();
+        List<String> allFile = getAllFile(filePath, false);
+        try {
+            Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+            cfg.setDirectoryForTemplateLoading(new File(filePath));
+            cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
+            for (String templatePath : allFile) {
+                StringBuilder classPath = new StringBuilder();
+                classPath.append(System.getProperty("user.dir")).append("/");
+                if (!StringUtils.isEmpty(projectMessage.getModule())) {
+                    classPath.append(projectMessage.getModule()).append("/");
+                }
+                classPath.append("/src/main/java/");
+                classPath.append(templatePath.substring(templatePath.indexOf("/others/")+"/others/".length()).replace(".ftl",""));
+                Template template = cfg.getTemplate(templatePath);
+                Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(classPath.toString()))));
+                template.process(projectMessage.getOtherField(),out);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<String> getAllFile(String directoryPath, boolean isAddDirectory) {
+        List<String> list = new ArrayList<String>();
+        File baseFile = new File(directoryPath);
+        if (baseFile.isFile() || !baseFile.exists()) {
+            return list;
+        }
+        File[] files = baseFile.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                if (isAddDirectory) {
+                    list.add(file.getAbsolutePath());
+                }
+                list.addAll(getAllFile(file.getAbsolutePath(), isAddDirectory));
+            } else {
+                list.add(file.getPath());
+            }
+        }
+        return list;
+    }
+
+
+    public void projectInit() {
 
     }
 
-    public void projectInit(){
-
-    }
-
-    private static String underline2Camel(String line, boolean ... firstIsUpperCase) {
+    private static String underline2Camel(String line, boolean... firstIsUpperCase) {
         String str = "";
 
-        if(StringUtils.isBlank(line)){
+        if (StringUtils.isBlank(line)) {
             return str;
         } else {
             StringBuilder sb = new StringBuilder();
@@ -205,5 +249,13 @@ public class CodeFactory {
             }
         }
         return str;
+    }
+
+    public static void main(String[] args) {
+        String filePath = "wwww/others/xxxxx";
+        int i = filePath.indexOf("/others/");
+        System.out.println(i);
+        String substring = filePath.substring(filePath.indexOf("/others/")+"/others/".length(), filePath.length());
+        System.out.println(substring);
     }
 }

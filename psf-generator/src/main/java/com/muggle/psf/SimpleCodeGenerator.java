@@ -135,7 +135,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
             .swagger(true).tableName(Arrays.asList("oa_url_info")).parentPack("base")
             .jdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC")
             .suffix("user").password("root").module("muggle-generator").projectPackage("com.muggle")
-            .initType(ProjectMessage.InitType.NORMAL).build();
+            .initType(ProjectMessage.InitType.ALL).build();
         CodeFactory.simpleGenerate(build);
     }
 }
