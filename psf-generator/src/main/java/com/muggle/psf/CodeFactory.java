@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,26 +54,31 @@ public class CodeFactory {
         try {
             String filePath = SimpleCodeGenerator.class.getClassLoader().getResource("template/").getFile();
             cfg.setDirectoryForTemplateLoading(new File(filePath));
-//            createPom()
             cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
-            template = cfg.getTemplate("webConfig.java.ftl");
-            Template pom = cfg.getTemplate("pom.ftl");
-            String fileName ="demo.java";
-            String path = System.getProperty("user.dir") + "/" + tableMessage.getModule() + "/src/main/java/"
-                + tableMessage.getProjectPackage().replace(".", "/") + "/config/";
-            File dir = new File(path);
-            if (!dir.exists()){
-                dir.mkdirs();
-            }
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path+"/webConfig.java"))));
-            // 输出文件
-            template.process(tableMessage, out);
+            createPom(cfg,filePath,tableMessage);
         } catch (IOException e) {
             e.printStackTrace();
             LOGGER.error("读取模板异常",e);
         } catch (TemplateException e) {
+            LOGGER.error("读取模板异常",e);
             e.printStackTrace();
         }
+    }
+
+    private static void createPom(Configuration cfg, String filePath, TableMessage tableMessage) throws IOException, TemplateException {
+        File file = new File(filePath + "/pom.xml.ftl");
+        if (!file.exists()){
+            throw new IllegalStateException("未找到文件 pom.xml.ftl");
+        }
+        Template template = cfg.getTemplate("pom.xml.ftl");
+        StringBuilder path = new StringBuilder();
+        path.append(System.getProperty("user.dir")).append("/");
+        if (!StringUtils.isEmpty(tableMessage.getModule())){
+            path.append(tableMessage.getModule()).append("/");
+        }
+        path.append("pom.xml");
+        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
+        template.process(tableMessage,out);
     }
 
     private static void doAll(TableMessage tableMessage) {
