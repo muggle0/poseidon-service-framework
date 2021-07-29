@@ -23,7 +23,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleCodeGenerator.class);
 
-    public SimpleCodeGenerator(TableMessage message) {
+    public SimpleCodeGenerator(ProjectMessage message) {
         super(message);
         LOGGER.info("==========> [启动代码模板生成器，注意如果数据库无该表则不生成对应的类]");
     }
@@ -35,7 +35,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
 
 
     @Override
-    DataSourceConfig configDataSource(TableMessage message) {
+    DataSourceConfig configDataSource(ProjectMessage message) {
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(message.getJdbcUrl());
         // dsc.setSchemaName("public");
@@ -47,7 +47,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
     }
 
     @Override
-    GlobalConfig configGlobal(TableMessage message) {
+    GlobalConfig configGlobal(ProjectMessage message) {
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
         gc.setOutputDir(projectPath+"/"+message.getModule()+ "/src/main/java");
@@ -61,7 +61,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
 
 
     @Override
-    PackageConfig configPc(TableMessage message) {
+    PackageConfig configPc(ProjectMessage message) {
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(message.getSuffix());
         pc.setParent(message.getProjectPackage());
@@ -69,7 +69,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
     }
 
     @Override
-    InjectionConfig fileConfig(final TableMessage message) {
+    InjectionConfig fileConfig(final ProjectMessage message) {
         InjectionConfig injectionConfig = new InjectionConfig() {
             @Override
             public void initMap() {
@@ -92,7 +92,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
     }
 
     @Override
-    TemplateConfig configTemp(TableMessage message) {
+    TemplateConfig configTemp(ProjectMessage message) {
         TemplateConfig templateConfig = new TemplateConfig();
 
         // 配置自定义输出模板
@@ -106,7 +106,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
     }
 
     @Override
-    StrategyConfig configStrategy(TableMessage message) {
+    StrategyConfig configStrategy(ProjectMessage message) {
 
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
@@ -130,23 +130,12 @@ public class SimpleCodeGenerator extends CodeGenerator {
         return strategy;
     }
 
-//    public static void main(String[] args) {
-//        TableMessage tableMessage = new TableMessage();
-//        tableMessage.setUsername("root");
-//        tableMessage.setSwagger(true);
-//        tableMessage.setTableName(Arrays.asList("oa_url_info"));
-//        tableMessage.setAuthor("muggle");
-//        tableMessage.setParentPack("xxxx");
-//        tableMessage.setProjectPackage("com.muggle");
-//        tableMessage.setDriver("com.mysql.jdbc.Driver");
-//        tableMessage.setJdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC");
-//        tableMessage.setSuffix("user");
-//        tableMessage.setModule("muggle-generator");
-//        tableMessage.setPassword("root");
-//        tableMessage.setSwagger(true);
-//        SimpleCodeGenerator simpleCodeGeneratorTemplate = new SimpleCodeGenerator(tableMessage);
-//        simpleCodeGeneratorTemplate.createCode();
-//        // 生成配置类
-//        simpleCodeGeneratorTemplate.createProjectConfig(tableMessage);
-//    }
+    public static void main(String[] args) {
+        ProjectMessage build = ProjectMessage.builder().author("muggle").driver("com.mysql.jdbc.Driver").username("root")
+            .swagger(true).tableName(Arrays.asList("oa_url_info")).parentPack("base")
+            .jdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC")
+            .suffix("user").password("root").module("muggle-generator").projectPackage("com.muggle")
+            .initType(ProjectMessage.InitType.NORMAL).build();
+        CodeFactory.simpleGenerate(build);
+    }
 }

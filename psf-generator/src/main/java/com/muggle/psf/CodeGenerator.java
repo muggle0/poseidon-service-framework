@@ -4,19 +4,8 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 /**
  * @program: poseidon-generator
@@ -29,9 +18,9 @@ public abstract class CodeGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeGenerator.class);
 
-    private TableMessage message;
+    private ProjectMessage message;
 
-    public CodeGenerator(TableMessage message) {
+    public CodeGenerator(ProjectMessage message) {
         this.message = message;
     }
 
@@ -43,7 +32,7 @@ public abstract class CodeGenerator {
      * @param dsc
      * @return
      */
-    abstract DataSourceConfig configDataSource(TableMessage dsc);
+    abstract DataSourceConfig configDataSource(ProjectMessage dsc);
 
     /**
      * 类属性配置
@@ -51,7 +40,7 @@ public abstract class CodeGenerator {
      * @param message 代码生成实体信息
      * @return
      */
-    abstract GlobalConfig configGlobal(TableMessage message);
+    abstract GlobalConfig configGlobal(ProjectMessage message);
 
     /**
      * 包属性配置
@@ -59,7 +48,7 @@ public abstract class CodeGenerator {
      * @param message
      * @return
      */
-    abstract PackageConfig configPc(TableMessage message);
+    abstract PackageConfig configPc(ProjectMessage message);
 
     /**
      * 文件属性配置
@@ -67,7 +56,7 @@ public abstract class CodeGenerator {
      * @param message
      * @return
      */
-    abstract InjectionConfig fileConfig(TableMessage message);
+    abstract InjectionConfig fileConfig(ProjectMessage message);
 
     /**
      * 代码模板配置
@@ -75,7 +64,7 @@ public abstract class CodeGenerator {
      * @param message
      * @return
      */
-    abstract TemplateConfig configTemp(TableMessage message);
+    abstract TemplateConfig configTemp(ProjectMessage message);
 
     /**
      * 父类相关配置
@@ -83,7 +72,7 @@ public abstract class CodeGenerator {
      * @param message
      * @return
      */
-    abstract StrategyConfig configStrategy(TableMessage message);
+    abstract StrategyConfig configStrategy(ProjectMessage message);
 
     /**
      * 实际执行生成代码的方法

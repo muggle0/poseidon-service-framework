@@ -12,9 +12,9 @@ import java.util.Map;
  * @create: 2019-12-05
  **/
 
-public class TableMessage {
+public class ProjectMessage {
 
-    private TableMessage() {
+    private ProjectMessage() {
 
     }
 
@@ -41,7 +41,7 @@ public class TableMessage {
     /**
      * 项目模块名
      */
-    private String module = "";
+    private String module ;
 
     private String projectPackage;
 
@@ -65,8 +65,8 @@ public class TableMessage {
      */
     private InitType initType;
 
-    public static TableMessageBuilder builder() {
-        return new TableMessageBuilder();
+    public static ProjectMessageBuilder builder() {
+        return new ProjectMessageBuilder();
     }
 
     public InitType getInitType() {
@@ -81,33 +81,89 @@ public class TableMessage {
         NORMAL, SIMPLE, ALL
     }
 
-    public static class TableMessageBuilder {
-        private TableMessage tableMessage;
+    public static class ProjectMessageBuilder {
+        private ProjectMessage projectMessage;
 
-        public TableMessageBuilder() {
-            this.tableMessage = new TableMessage();
+        public ProjectMessageBuilder() {
+            this.projectMessage = new ProjectMessage();
         }
 
-        public TableMessage build() {
-            if (StringUtils.isEmpty(tableMessage.getAuthor())) {
+        public ProjectMessageBuilder initType(InitType initType){
+            projectMessage.setInitType(initType);
+            return this;
+        }
+        public ProjectMessageBuilder parentPack(String parentPack){
+            projectMessage.setParentPack(parentPack);
+            return this;
+        }
+        public ProjectMessageBuilder otherField(Map<String,String> map){
+            projectMessage.setOtherField(map);
+            return this;
+        }
+        public ProjectMessageBuilder driver(String driver){
+            projectMessage.setDriver(driver);
+            return this;
+        }
+        public ProjectMessageBuilder tableName(List<String> tables){
+            projectMessage.setTableName(tables);
+            return this;
+        }
+        public ProjectMessageBuilder author(String author){
+            projectMessage.setAuthor(author);
+            return this;
+        }
+        public ProjectMessageBuilder swagger(boolean swagger){
+            projectMessage.setSwagger(swagger);
+            return this;
+        }
+        public ProjectMessageBuilder projectPackage(String projectPack){
+            projectMessage.setProjectPackage(projectPack);
+            return this;
+        }
+        public ProjectMessageBuilder module(String module){
+            projectMessage.setModule(module);
+            return this;
+        }
+        public ProjectMessageBuilder password(String password){
+            projectMessage.setPassword(password);
+            return this;
+        }
+        public ProjectMessageBuilder username(String username){
+            projectMessage.setUsername(username);
+            return this;
+        }
+        public ProjectMessageBuilder jdbcUrl(String jdbcUrl){
+            projectMessage.setJdbcUrl(jdbcUrl);
+            return this;
+        }
+        public ProjectMessageBuilder suffix(String suffix){
+            projectMessage.setSuffix(suffix);
+            return this;
+        }
+
+        public ProjectMessage build() {
+            if (StringUtils.isEmpty(projectMessage.getAuthor())) {
                 throw new IllegalArgumentException("请设置作者 Author");
             }
-            if (StringUtils.isEmpty(tableMessage.getDriver())) {
+            if (StringUtils.isEmpty(projectMessage.getDriver())) {
                 throw new IllegalArgumentException("请设置数据库驱动 driver");
             }
-            if (StringUtils.isEmpty(tableMessage.getJdbcUrl())) {
+            if (StringUtils.isEmpty(projectMessage.getJdbcUrl())) {
                 throw new IllegalArgumentException("请设置url链接 jdbcUrl");
             }
-            if (tableMessage.getModule() == null) {
-                tableMessage.setModule("");
+            if (StringUtils.isEmpty(projectMessage.getProjectPackage())) {
+                throw new IllegalArgumentException("请设置项目包路径 projectPackage");
             }
-            if (tableMessage.getTableName() == null || tableMessage.getTableName().size() < 1) {
+            if (projectMessage.getModule() == null) {
+                projectMessage.setModule("");
+            }
+            if (projectMessage.getTableName() == null || projectMessage.getTableName().size() < 1) {
                 throw new IllegalArgumentException("请设置表名 jdbcUrl");
             }
-            if (tableMessage.getInitType()==null){
-                tableMessage.setInitType(InitType.SIMPLE);
+            if (projectMessage.getInitType()==null){
+                projectMessage.setInitType(InitType.SIMPLE);
             }
-            return tableMessage;
+            return projectMessage;
         }
     }
 
