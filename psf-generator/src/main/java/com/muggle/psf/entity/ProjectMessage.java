@@ -1,4 +1,4 @@
-package com.muggle.psf;
+package com.muggle.psf.entity;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -1,9 +1,10 @@
-package com.muggle.psf;
+package com.muggle.psf.genera;
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.muggle.psf.entity.ProjectMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

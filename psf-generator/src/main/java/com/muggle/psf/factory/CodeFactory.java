@@ -1,7 +1,9 @@
-package com.muggle.psf;
+package com.muggle.psf.factory;
 
+import com.muggle.psf.constant.GlobalConstant;
+import com.muggle.psf.entity.ProjectMessage;
+import com.muggle.psf.genera.CodeGenerator;
 import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
@@ -14,73 +16,45 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
+import static com.muggle.psf.constant.CodePath.MAIN_CLASS;
 
 /**
  * Description
- * Date 2021/7/29
+ * Date 2021/7/30
  * Created by muggle
  */
 public class CodeFactory {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeFactory.class);
 
+    private static  CodeGenerator codeGenerator;
 
-    public static void simpleGenerate(ProjectMessage tableMessage){
-        LOGGER.info(">>>>>>>>>>>>>>>>>>>> 生成项目初始化文件 <<<<<<<<<<<<<<<<<");
-        CodeGenerator codeGenerator = new SimpleCodeGenerator(tableMessage);
+
+    public static void init(CodeGenerator codeGenerator){
+        CodeFactory.codeGenerator=codeGenerator;
+    }
+
+    public static void createCode(){
+        if (codeGenerator==null){
+            throw new IllegalArgumentException("代码生成器未初始化");
+        }
         codeGenerator.createCode();
-        switch (tableMessage.getInitType()){
-            case ALL:
-                doAll(tableMessage);
-                break;
-            case NORMAL:
-                doNormal(tableMessage);
-                break;
-            case SIMPLE:
-//                doSimple(tableMessage);
-                break;
-            default:
-                break;
-        }
-        LOGGER.info(">>>>>>>>>>>>>>>>>>>> 项目初始化文件生成完成 <<<<<<<<<<<<<<<<<");
     }
 
-    private static void doSimple(ProjectMessage tableMessage) {
-    }
-
-    private static void doNormal(ProjectMessage tableMessage) {
-        Configuration cfg =new Configuration(Configuration.VERSION_2_3_28);
-        try {
-            String filePath = SimpleCodeGenerator.class.getClassLoader().getResource("template/").getFile();
-            cfg.setDirectoryForTemplateLoading(new File(filePath));
-            cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
-            createPom(cfg, filePath, tableMessage);
-            createReadme(cfg, filePath, tableMessage);
-            createBanner(cfg, filePath, tableMessage);
-            createMainClass(cfg,filePath,tableMessage);
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error("读取模板异常", e);
-        } catch (TemplateException e) {
-            LOGGER.error("读取模板异常", e);
-            e.printStackTrace();
-        }
-    }
-
-    private static void createMainClass(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
-        File file = new File(filePath + "/mainClass.java.ftl");
+    public static void createMainClass(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
+        File file = new File(filePath.concat(GlobalConstant.SEPARATION).concat(MAIN_CLASS) );
         if (!file.exists()) {
             throw new IllegalStateException("未找到文件 mainClass.java.ftl");
         }
-        Template template = cfg.getTemplate("mainClass.java.ftl");
+        Template template = cfg.getTemplate(MAIN_CLASS);
         StringBuilder path = new StringBuilder();
-        path.append(System.getProperty("user.dir")).append("/");
+        path.append(System.getProperty(GlobalConstant.USER_DIR)).append(GlobalConstant.SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
-            path.append(projectMessage.getModule()).append("/");
+            path.append(projectMessage.getModule()).append(GlobalConstant.SEPARATION);
         }
-        path.append("/src/main/java/");
+        path.append(GlobalConstant.MAVEN_SRC_FILE).append(GlobalConstant.SEPARATION);
         path.append(projectMessage.getProjectPackage().replace(".","/")).append("/");
         String module = projectMessage.getModule();
         String className = underline2Camel(module, true);
@@ -92,7 +66,7 @@ public class CodeFactory {
         template.process(model,out);
     }
 
-    private static void createBanner(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException {
+    public static void createBanner(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException {
         File banner = new File(System.getProperty("user.dir") + "/" + projectMessage.getModule() + "/banner.txt");
         if (!banner.exists()) {
             FileOutputStream fileOutputStream = new FileOutputStream(banner);
@@ -108,10 +82,11 @@ public class CodeFactory {
                 "                                        | $$\n" +
                 "                                        |__/";
             fileOutputStream.write(logo.getBytes());
+            LOGGER.info("生成banner》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
         }
     }
 
-    private static void createReadme(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
+    public static void createReadme(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
         File file = new File(filePath + "/readme.md.ftl");
         if (!file.exists()) {
             File readme = new File(System.getProperty("user.dir") + "/" + projectMessage.getModule() + "/readme.md");
@@ -138,10 +113,11 @@ public class CodeFactory {
             path.append("readme.md");
             Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
             template.process(projectMessage, out);
+            LOGGER.info("生成 readme.md》》》》》》》》》》》》》》》》》");
         }
     }
 
-    private static void createPom(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
+    public static void createPom(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
         File file = new File(filePath + "/pom.xml.ftl");
         if (!file.exists()) {
             throw new IllegalStateException("未找到文件 pom.xml.ftl");
@@ -155,63 +131,7 @@ public class CodeFactory {
         path.append("pom.xml");
         Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
         template.process(projectMessage,out);
-    }
-
-    private static void doAll(ProjectMessage projectMessage) {
-        doNormal(projectMessage);
-        String filePath = SimpleCodeGenerator.class.getClassLoader().getResource("others/").getFile();
-        List<String> allFile = getAllFile(filePath, false);
-        try {
-            Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
-            cfg.setDirectoryForTemplateLoading(new File(filePath));
-            cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
-            for (String templatePath : allFile) {
-                StringBuilder classPath = new StringBuilder();
-                classPath.append(System.getProperty("user.dir")).append("/");
-                if (!StringUtils.isEmpty(projectMessage.getModule())) {
-                    classPath.append(projectMessage.getModule()).append("/");
-                }
-                String tempSubPath = templatePath.substring(templatePath.indexOf("/others/") + "/others/".length()).replace(".ftl", "");
-                classPath.append("/src/main/java/").append(projectMessage.getProjectPackage().replace(".","/"))
-                    .append("/").append(tempSubPath);
-                Template template = cfg.getTemplate(tempSubPath+".ftl");
-                File classFile = new File(classPath.toString());
-                if (!classFile.getParentFile().exists()){
-                    classFile.getParentFile().mkdirs();
-                }
-                Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(classPath.toString()))));
-                template.process(projectMessage.getOtherField(),out);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TemplateException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static List<String> getAllFile(String directoryPath, boolean isAddDirectory) {
-        List<String> list = new ArrayList<String>();
-        File baseFile = new File(directoryPath);
-        if (baseFile.isFile() || !baseFile.exists()) {
-            return list;
-        }
-        File[] files = baseFile.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                if (isAddDirectory) {
-                    list.add(file.getAbsolutePath());
-                }
-                list.addAll(getAllFile(file.getAbsolutePath(), isAddDirectory));
-            } else {
-                list.add(file.getPath().replace("\\","/"));
-            }
-        }
-        return list;
-    }
-
-
-    public void projectInit() {
-
+        LOGGER.info("生成pom文件》》》》》》》》》》》》");
     }
 
     private static String underline2Camel(String line, boolean... firstIsUpperCase) {
@@ -255,5 +175,4 @@ public class CodeFactory {
         }
         return str;
     }
-
 }

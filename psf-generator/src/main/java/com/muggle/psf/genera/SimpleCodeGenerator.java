@@ -1,10 +1,13 @@
-package com.muggle.psf;
+package com.muggle.psf.genera;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.muggle.psf.factory.PoseidonCodeFactory;
+import com.muggle.psf.constant.GlobalConstant;
+import com.muggle.psf.entity.ProjectMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +52,8 @@ public class SimpleCodeGenerator extends CodeGenerator {
     @Override
     GlobalConfig configGlobal(ProjectMessage message) {
         GlobalConfig gc = new GlobalConfig();
-        String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath+"/"+message.getModule()+ "/src/main/java");
+        String projectPath = System.getProperty(GlobalConstant.USER_DIR);
+        gc.setOutputDir(projectPath+GlobalConstant.SEPARATION+message.getModule()+ GlobalConstant.MAVEN_SRC_FILE);
         gc.setAuthor(message.getAuthor());
         gc.setOpen(false);
         // 实体属性 Swagger2 注解
@@ -77,12 +80,12 @@ public class SimpleCodeGenerator extends CodeGenerator {
             }
         };
         List<FileOutConfig> focList = new ArrayList<>();
-        // 自定义配置会被优先输出
-        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+        // 自定义配置会被优先输出 fixme
+        focList.add(new FileOutConfig("/common/mapper.xml.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return System.getProperty("user.dir")+"/"+message.getModule() + "/src/main/resources/mapper/" + message.getSuffix()
+                return System.getProperty(GlobalConstant.USER_DIR)+"/"+message.getModule() + "/src/main/resources/mapper/" + message.getSuffix()
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
@@ -107,7 +110,6 @@ public class SimpleCodeGenerator extends CodeGenerator {
 
     @Override
     StrategyConfig configStrategy(ProjectMessage message) {
-
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
@@ -127,15 +129,17 @@ public class SimpleCodeGenerator extends CodeGenerator {
         strategy.setInclude(strings);
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(message.getSuffix() + "_");
+        LOGGER.debug("基类设置 controlClass：{} entityClass：{}",controlClass,entityClass);
         return strategy;
     }
 
     public static void main(String[] args) {
         ProjectMessage build = ProjectMessage.builder().author("muggle").driver("com.mysql.jdbc.Driver").username("root")
-            .swagger(true).tableName(Arrays.asList("oa_url_info")).parentPack("base")
+            .swagger(true).tableName(Arrays.asList("oa_url_info")).parentPack("com.muggle.base")
             .jdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC")
             .suffix("user").password("root").module("muggle-generator").projectPackage("com.muggle")
             .initType(ProjectMessage.InitType.ALL).build();
-        CodeFactory.simpleGenerate(build);
+        PoseidonCodeFactory.init(new SimpleCodeGenerator(build));
+        PoseidonCodeFactory.generate(build);
     }
 }
