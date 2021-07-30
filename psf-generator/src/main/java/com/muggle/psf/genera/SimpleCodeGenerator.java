@@ -31,10 +31,6 @@ public class SimpleCodeGenerator extends CodeGenerator {
         LOGGER.info("==========> [启动代码模板生成器，注意如果数据库无该表则不生成对应的类]");
     }
 
-    @Override
-    void connect() {
-
-    }
 
 
     @Override
@@ -81,7 +77,7 @@ public class SimpleCodeGenerator extends CodeGenerator {
         };
         List<FileOutConfig> focList = new ArrayList<>();
         // 自定义配置会被优先输出 fixme
-        focList.add(new FileOutConfig("/common/mapper.xml.ftl") {
+        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！

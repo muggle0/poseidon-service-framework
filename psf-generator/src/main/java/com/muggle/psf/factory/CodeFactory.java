@@ -18,7 +18,12 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 
+import static com.muggle.psf.constant.CodePath.BANNER;
 import static com.muggle.psf.constant.CodePath.MAIN_CLASS;
+import static com.muggle.psf.constant.CodePath.POM;
+import static com.muggle.psf.constant.CodePath.README;
+import static com.muggle.psf.constant.GlobalConstant.SEPARATION;
+import static com.muggle.psf.constant.GlobalConstant.USER_DIR;
 
 /**
  * Description
@@ -50,7 +55,7 @@ public class CodeFactory {
         }
         Template template = cfg.getTemplate(MAIN_CLASS);
         StringBuilder path = new StringBuilder();
-        path.append(System.getProperty(GlobalConstant.USER_DIR)).append(GlobalConstant.SEPARATION);
+        path.append(System.getProperty(USER_DIR)).append(GlobalConstant.SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
             path.append(projectMessage.getModule()).append(GlobalConstant.SEPARATION);
         }
@@ -66,8 +71,8 @@ public class CodeFactory {
         template.process(model,out);
     }
 
-    public static void createBanner(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException {
-        File banner = new File(System.getProperty("user.dir") + "/" + projectMessage.getModule() + "/banner.txt");
+    public static void createBanner(ProjectMessage projectMessage) throws IOException {
+        File banner = new File(System.getProperty(USER_DIR) + SEPARATION + projectMessage.getModule() + BANNER);
         if (!banner.exists()) {
             FileOutputStream fileOutputStream = new FileOutputStream(banner);
             String logo = "                                                                                 /$$       /$$\n" +
@@ -87,9 +92,9 @@ public class CodeFactory {
     }
 
     public static void createReadme(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
-        File file = new File(filePath + "/readme.md.ftl");
+        File file = new File(filePath.concat(README));
         if (!file.exists()) {
-            File readme = new File(System.getProperty("user.dir") + "/" + projectMessage.getModule() + "/readme.md");
+            File readme = new File(System.getProperty(USER_DIR) + SEPARATION + projectMessage.getModule() + "/readme.md");
             if (!readme.exists()) {
                 // 写标志
                 FileOutputStream fileOutputStream = new FileOutputStream(readme);
@@ -106,9 +111,9 @@ public class CodeFactory {
         } else {
             Template template = cfg.getTemplate("readme.md.ftl");
             StringBuilder path = new StringBuilder();
-            path.append(System.getProperty("user.dir")).append("/");
+            path.append(System.getProperty(USER_DIR)).append(SEPARATION);
             if (!StringUtils.isEmpty(projectMessage.getModule())) {
-                path.append(projectMessage.getModule()).append("/");
+                path.append(projectMessage.getModule()).append(SEPARATION);
             }
             path.append("readme.md");
             Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
@@ -118,15 +123,15 @@ public class CodeFactory {
     }
 
     public static void createPom(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
-        File file = new File(filePath + "/pom.xml.ftl");
+        File file = new File(filePath.concat(POM));
         if (!file.exists()) {
             throw new IllegalStateException("未找到文件 pom.xml.ftl");
         }
         Template template = cfg.getTemplate("pom.xml.ftl");
         StringBuilder path = new StringBuilder();
-        path.append(System.getProperty("user.dir")).append("/");
+        path.append(System.getProperty(USER_DIR)).append(SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
-            path.append(projectMessage.getModule()).append("/");
+            path.append(projectMessage.getModule()).append(SEPARATION);
         }
         path.append("pom.xml");
         Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
@@ -134,6 +139,7 @@ public class CodeFactory {
         LOGGER.info("生成pom文件》》》》》》》》》》》》");
     }
 
+    @SuppressWarnings("all")
     private static String underline2Camel(String line, boolean... firstIsUpperCase) {
         String str = "";
 

@@ -10,4 +10,6 @@ public interface GlobalConstant {
     String MAVEN_SRC_FILE="/src/main/java";
     String SEPARATION="/";
     String CLOGBAL_DIR="template/";
+    String OTHER="others/";
+    String FM_PERFIX=".ftl";
 }

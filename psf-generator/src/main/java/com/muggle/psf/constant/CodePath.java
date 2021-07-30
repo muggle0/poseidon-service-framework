@@ -7,4 +7,7 @@ package com.muggle.psf.constant;
  */
 public interface CodePath {
     String MAIN_CLASS="mainClass.java.ftl";
+    String BANNER="/banner.txt";
+    String README="/readme.md.ftl";
+    String POM="/pom.xml.ftl";
 }

@@ -1,5 +1,6 @@
 package com.muggle.psf.factory;
 
+import com.muggle.psf.constant.GlobalConstant;
 import com.muggle.psf.entity.ProjectMessage;
 import com.muggle.psf.genera.SimpleCodeGenerator;
 import freemarker.template.Configuration;
@@ -18,6 +19,12 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.muggle.psf.constant.GlobalConstant.FM_PERFIX;
+import static com.muggle.psf.constant.GlobalConstant.MAVEN_SRC_FILE;
+import static com.muggle.psf.constant.GlobalConstant.OTHER;
+import static com.muggle.psf.constant.GlobalConstant.SEPARATION;
+import static com.muggle.psf.constant.GlobalConstant.USER_DIR;
 
 /**
  * Description
@@ -48,23 +55,21 @@ public class PoseidonCodeFactory extends CodeFactory {
     private static void doNormal(ProjectMessage tableMessage) {
         Configuration cfg =new Configuration(Configuration.VERSION_2_3_28);
         try {
-            String filePath = SimpleCodeGenerator.class.getClassLoader().getResource("template/").getFile();
+            String filePath = SimpleCodeGenerator.class.getClassLoader().getResource(GlobalConstant.CLOGBAL_DIR).getFile();
             cfg.setDirectoryForTemplateLoading(new File(filePath));
             cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
             createPom(cfg, filePath, tableMessage);
             createReadme(cfg, filePath, tableMessage);
-            createBanner(cfg, filePath, tableMessage);
+            createBanner(tableMessage);
             createMainClass(cfg,filePath,tableMessage);
-        } catch (IOException e) {
-            LOGGER.error("读取模板异常", e);
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             LOGGER.error("读取模板异常", e);
         }
     }
 
     private static void doAll(ProjectMessage projectMessage) {
         doNormal(projectMessage);
-        String filePath = SimpleCodeGenerator.class.getClassLoader().getResource("others/").getFile();
+        String filePath = SimpleCodeGenerator.class.getClassLoader().getResource(GlobalConstant.OTHER).getFile();
         List<String> allFile = getAllFile(filePath, false);
         try {
             Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
@@ -72,13 +77,13 @@ public class PoseidonCodeFactory extends CodeFactory {
             cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
             for (String templatePath : allFile) {
                 StringBuilder classPath = new StringBuilder();
-                classPath.append(System.getProperty("user.dir")).append("/");
+                classPath.append(System.getProperty(USER_DIR)).append(SEPARATION);
                 if (!StringUtils.isEmpty(projectMessage.getModule())) {
-                    classPath.append(projectMessage.getModule()).append("/");
+                    classPath.append(projectMessage.getModule()).append(SEPARATION);
                 }
-                String tempSubPath = templatePath.substring(templatePath.indexOf("/others/") + "/others/".length()).replace(".ftl", "");
-                classPath.append("/src/main/java/").append(projectMessage.getProjectPackage().replace(".","/"))
-                    .append("/").append(tempSubPath);
+                String tempSubPath = templatePath.substring(templatePath.indexOf(OTHER.concat(SEPARATION)) + "/others/".length()).replace(FM_PERFIX, "");
+                classPath.append(MAVEN_SRC_FILE.concat(SEPARATION)).append(projectMessage.getProjectPackage().replace(".",SEPARATION))
+                    .append(SEPARATION).append(tempSubPath);
                 Template template = cfg.getTemplate(tempSubPath+".ftl");
                 File classFile = new File(classPath.toString());
                 if (!classFile.getParentFile().exists()){
@@ -87,15 +92,13 @@ public class PoseidonCodeFactory extends CodeFactory {
                 Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(classPath.toString()))));
                 template.process(projectMessage.getOtherField(),out);
             }
-        } catch (IOException e) {
-            LOGGER.error("读取模板异常", e);
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             LOGGER.error("读取模板异常", e);
         }
     }
 
     private static List<String> getAllFile(String directoryPath, boolean isAddDirectory) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         File baseFile = new File(directoryPath);
         if (baseFile.isFile() || !baseFile.exists()) {
             return list;
@@ -107,8 +110,8 @@ public class PoseidonCodeFactory extends CodeFactory {
                     list.add(file.getAbsolutePath());
                 }
                 list.addAll(getAllFile(file.getAbsolutePath(), isAddDirectory));
-            } else {
-                list.add(file.getPath().replace("\\","/"));
+            } else if (file.getPath().endsWith(FM_PERFIX)){
+                list.add(file.getPath().replace("\\",SEPARATION));
             }
         }
         return list;

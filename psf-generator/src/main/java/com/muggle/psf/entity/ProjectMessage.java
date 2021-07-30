@@ -77,12 +77,12 @@ public class ProjectMessage {
         this.initType = initType;
     }
 
-    public static enum InitType {
+    public enum InitType {
         NORMAL, SIMPLE, ALL
     }
 
     public static class ProjectMessageBuilder {
-        private ProjectMessage projectMessage;
+        private final ProjectMessage projectMessage;
 
         public ProjectMessageBuilder() {
             this.projectMessage = new ProjectMessage();

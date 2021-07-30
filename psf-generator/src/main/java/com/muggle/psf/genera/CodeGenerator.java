@@ -17,15 +17,13 @@ import org.slf4j.LoggerFactory;
 
 public abstract class CodeGenerator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CodeGenerator.class);
 
-    private ProjectMessage message;
+    private final ProjectMessage message;
 
     public CodeGenerator(ProjectMessage message) {
         this.message = message;
     }
 
-    abstract void connect();
 
     /**
      * 数据库配置
