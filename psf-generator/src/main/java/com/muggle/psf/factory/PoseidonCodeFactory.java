@@ -79,9 +79,9 @@ public class PoseidonCodeFactory extends CodeFactory {
                 StringBuilder classPath = new StringBuilder();
                 classPath.append(System.getProperty(USER_DIR)).append(SEPARATION);
                 if (!StringUtils.isEmpty(projectMessage.getModule())) {
-                    classPath.append(projectMessage.getModule()).append(SEPARATION);
+                    classPath.append(projectMessage.getModule());
                 }
-                String tempSubPath = templatePath.substring(templatePath.indexOf(OTHER.concat(SEPARATION)) + "/others/".length()).replace(FM_PERFIX, "");
+                String tempSubPath = templatePath.substring(templatePath.indexOf("/others/") + "/others/".length()).replace(FM_PERFIX, "");
                 classPath.append(MAVEN_SRC_FILE.concat(SEPARATION)).append(projectMessage.getProjectPackage().replace(".",SEPARATION))
                     .append(SEPARATION).append(tempSubPath);
                 Template template = cfg.getTemplate(tempSubPath+".ftl");
