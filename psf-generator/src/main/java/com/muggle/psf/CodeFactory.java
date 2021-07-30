@@ -171,9 +171,14 @@ public class CodeFactory {
                 if (!StringUtils.isEmpty(projectMessage.getModule())) {
                     classPath.append(projectMessage.getModule()).append("/");
                 }
-                classPath.append("/src/main/java/");
-                classPath.append(templatePath.substring(templatePath.indexOf("/others/")+"/others/".length()).replace(".ftl",""));
-                Template template = cfg.getTemplate(templatePath);
+                String tempSubPath = templatePath.substring(templatePath.indexOf("/others/") + "/others/".length()).replace(".ftl", "");
+                classPath.append("/src/main/java/").append(projectMessage.getProjectPackage().replace(".","/"))
+                    .append("/").append(tempSubPath);
+                Template template = cfg.getTemplate(tempSubPath+".ftl");
+                File classFile = new File(classPath.toString());
+                if (!classFile.getParentFile().exists()){
+                    classFile.getParentFile().mkdirs();
+                }
                 Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(classPath.toString()))));
                 template.process(projectMessage.getOtherField(),out);
             }
@@ -198,7 +203,7 @@ public class CodeFactory {
                 }
                 list.addAll(getAllFile(file.getAbsolutePath(), isAddDirectory));
             } else {
-                list.add(file.getPath());
+                list.add(file.getPath().replace("\\","/"));
             }
         }
         return list;
@@ -251,11 +256,4 @@ public class CodeFactory {
         return str;
     }
 
-    public static void main(String[] args) {
-        String filePath = "wwww/others/xxxxx";
-        int i = filePath.indexOf("/others/");
-        System.out.println(i);
-        String substring = filePath.substring(filePath.indexOf("/others/")+"/others/".length(), filePath.length());
-        System.out.println(substring);
-    }
 }
