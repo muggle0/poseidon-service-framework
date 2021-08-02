@@ -18,7 +18,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.muggle.psf.constant.GlobalConstant.FM_PERFIX;
 import static com.muggle.psf.constant.GlobalConstant.MAVEN_SRC_FILE;
@@ -90,12 +92,17 @@ public class PoseidonCodeFactory extends CodeFactory {
                     classFile.getParentFile().mkdirs();
                 }
                 Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(classPath.toString()))));
-                template.process(projectMessage.getOtherField(),out);
+                String packageName = projectMessage.getProjectPackage().concat(".").concat(tempSubPath.substring(0, tempSubPath
+                    .lastIndexOf('/')).replace("/", "."));
+                projectMessage.getOtherField().put("packageName",packageName);
+                template.process(projectMessage,out);
             }
         } catch (IOException | TemplateException e) {
             LOGGER.error("读取模板异常", e);
         }
     }
+
+
 
     private static List<String> getAllFile(String directoryPath, boolean isAddDirectory) {
         List<String> list = new ArrayList<>();
@@ -116,4 +123,5 @@ public class PoseidonCodeFactory extends CodeFactory {
         }
         return list;
     }
+
 }

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.muggle.psf.constant.CodePath.BANNER;
 import static com.muggle.psf.constant.CodePath.MAIN_CLASS;
@@ -67,8 +68,8 @@ public class CodeFactory {
         path.append(className).append("Application").append(".java");
         Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
         HashMap<String, String> model = new HashMap<>();
-        model.put("className",className.concat("Application"));
-        template.process(model,out);
+        projectMessage.getOtherField().put("className",className.concat("Application"));
+        template.process(projectMessage,out);
     }
 
     public static void createBanner(ProjectMessage projectMessage) throws IOException {

@@ -2,6 +2,7 @@ package com.muggle.psf.entity;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -162,6 +163,9 @@ public class ProjectMessage {
             }
             if (projectMessage.getInitType()==null){
                 projectMessage.setInitType(InitType.SIMPLE);
+            }
+            if (projectMessage.getOtherField()==null){
+                projectMessage.setOtherField(new HashMap<>());
             }
             return projectMessage;
         }
