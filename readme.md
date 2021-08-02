@@ -90,7 +90,7 @@ settings-al.xml 请联系本人获取
 
 # 3. 组件划分
 
-## 3.1 psf-code-generator
+## 3.1 psf-generator
 
 该组件为代码生成工具，用于快速生成依赖psf 的maven 项目，便于业务开发
 

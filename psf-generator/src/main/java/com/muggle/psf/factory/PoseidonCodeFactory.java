@@ -18,13 +18,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.muggle.psf.constant.GlobalConstant.FM_PERFIX;
 import static com.muggle.psf.constant.GlobalConstant.MAVEN_SRC_FILE;
-import static com.muggle.psf.constant.GlobalConstant.OTHER;
 import static com.muggle.psf.constant.GlobalConstant.SEPARATION;
 import static com.muggle.psf.constant.GlobalConstant.USER_DIR;
 
