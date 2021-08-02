@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
+        <logstash.version>5.3</logstash.version>
         <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
         <alibaba.cloud.version>2.1.0.RELEASE</alibaba.cloud.version>
         <java.version>1.8</java.version>
@@ -62,7 +63,17 @@
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper</artifactId>
-                <version>5.1.7</version>
+                <version>5.1.11</version>
+            </dependency>
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${logstash.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>ding-sdk</artifactId>
+                <version>1</version>
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
@@ -79,9 +90,10 @@
                 <artifactId>txlcn-txmsg-netty</artifactId>
                 <version>${tx.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.muggle</groupId>
-                <artifactId>poseidon-cloud-starter</artifactId>
+                <artifactId>psf-utils</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
