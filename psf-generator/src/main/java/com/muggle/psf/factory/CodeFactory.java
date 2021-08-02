@@ -46,6 +46,9 @@ public class CodeFactory {
         if (codeGenerator==null){
             throw new IllegalArgumentException("代码生成器未初始化");
         }
+        if (Boolean.getBoolean("skipJdbc")){
+            return;
+        }
         codeGenerator.createCode();
     }
 

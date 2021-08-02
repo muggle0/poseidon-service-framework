@@ -146,21 +146,31 @@ public class ProjectMessage {
             if (StringUtils.isEmpty(projectMessage.getAuthor())) {
                 throw new IllegalArgumentException("请设置作者 Author");
             }
-            if (StringUtils.isEmpty(projectMessage.getDriver())) {
-                throw new IllegalArgumentException("请设置数据库驱动 driver");
+            if (!Boolean.getBoolean("skipJdbc")){
+                if (StringUtils.isEmpty(projectMessage.getDriver())) {
+                    throw new IllegalArgumentException("请设置数据库驱动 driver");
+                }
+                if (StringUtils.isEmpty(projectMessage.getJdbcUrl())) {
+                    throw new IllegalArgumentException("请设置url链接 jdbcUrl");
+                }
+                if (projectMessage.getTableName() == null || projectMessage.getTableName().size() < 1) {
+                    throw new IllegalArgumentException("请设置表名 jdbcUrl");
+                }
+                if (StringUtils.isEmpty(projectMessage.getPassword())){
+                    throw new IllegalArgumentException("请设置数据库密码 password");
+                }
+                if (StringUtils.isEmpty(projectMessage.getUsername())){
+                    throw new IllegalArgumentException("请设置数据库用户名 username");
+                }
             }
-            if (StringUtils.isEmpty(projectMessage.getJdbcUrl())) {
-                throw new IllegalArgumentException("请设置url链接 jdbcUrl");
-            }
+
             if (StringUtils.isEmpty(projectMessage.getProjectPackage())) {
                 throw new IllegalArgumentException("请设置项目包路径 projectPackage");
             }
             if (projectMessage.getModule() == null) {
                 projectMessage.setModule("");
             }
-            if (projectMessage.getTableName() == null || projectMessage.getTableName().size() < 1) {
-                throw new IllegalArgumentException("请设置表名 jdbcUrl");
-            }
+
             if (projectMessage.getInitType()==null){
                 projectMessage.setInitType(InitType.SIMPLE);
             }
