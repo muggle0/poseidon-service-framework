@@ -8,8 +8,9 @@ package com.muggle.psf.constant;
 public interface GlobalConstant {
     String USER_DIR="user.dir";
     String MAVEN_SRC_FILE="/src/main/java";
+    String MAVEN_RESOURECES_FILE="/src/main/resources";
     String SEPARATION="/";
-    String CLOGBAL_DIR="template/";
-    String OTHER="others/";
+    String CLOGBAL_DIR= "psf-template/";
+    String OTHER="psf-others/";
     String FM_PERFIX=".ftl";
 }

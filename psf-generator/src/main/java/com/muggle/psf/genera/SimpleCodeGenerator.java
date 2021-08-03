@@ -33,7 +33,8 @@ public class SimpleCodeGenerator extends CodeGenerator {
         LOGGER.info("==========> [启动代码模板生成器，注意如果数据库无该表则不生成对应的类]");
     }
 
-
+    public SimpleCodeGenerator() {
+    }
 
     @Override
     DataSourceConfig configDataSource(ProjectMessage message) {

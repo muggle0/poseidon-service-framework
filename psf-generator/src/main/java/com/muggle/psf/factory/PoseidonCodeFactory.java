@@ -2,28 +2,14 @@ package com.muggle.psf.factory;
 
 import com.muggle.psf.constant.GlobalConstant;
 import com.muggle.psf.entity.ProjectMessage;
-import com.muggle.psf.genera.SimpleCodeGenerator;
+import com.muggle.psf.genera.CodeGenerator;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.muggle.psf.constant.GlobalConstant.FM_PERFIX;
-import static com.muggle.psf.constant.GlobalConstant.MAVEN_SRC_FILE;
-import static com.muggle.psf.constant.GlobalConstant.SEPARATION;
-import static com.muggle.psf.constant.GlobalConstant.USER_DIR;
 
 /**
  * Description
@@ -33,92 +19,37 @@ import static com.muggle.psf.constant.GlobalConstant.USER_DIR;
 public class PoseidonCodeFactory extends CodeFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(PoseidonCodeFactory.class);
 
-    public static void generate(ProjectMessage projectMessage) {
-        LOGGER.info(">>>>>>>>>>>>>>>>>>>> 生成项目初始化文件 <<<<<<<<<<<<<<<<<");
-        createCode();
-        switch (projectMessage.getInitType()) {
-            case ALL:
-                doAll(projectMessage);
-                break;
-            case NORMAL:
-                doNormal(projectMessage);
-                break;
-            case SIMPLE:
-                break;
-            default:
-                break;
-        }
-        LOGGER.info(">>>>>>>>>>>>>>>>>>>> 项目初始化文件生成完成 <<<<<<<<<<<<<<<<<");
-    }
-
-    private static void doNormal(ProjectMessage tableMessage) {
-        Configuration cfg =new Configuration(Configuration.VERSION_2_3_28);
+    public static void createProject(ProjectMessage projectMessage) {
         try {
-            String filePath = SimpleCodeGenerator.class.getClassLoader().getResource(GlobalConstant.CLOGBAL_DIR).getFile();
-            cfg.setDirectoryForTemplateLoading(new File(filePath));
-            cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
-            createPom(cfg, filePath, tableMessage);
-            createReadme(cfg, filePath, tableMessage);
-            createBanner(tableMessage);
-            createMainClass(cfg,filePath,tableMessage);
-        } catch (IOException | TemplateException e) {
-            LOGGER.error("读取模板异常", e);
-        }
-    }
-
-    private static void doAll(ProjectMessage projectMessage) {
-        doNormal(projectMessage);
-        String filePath = SimpleCodeGenerator.class.getClassLoader().getResource(GlobalConstant.OTHER).getFile();
-        List<String> allFile = getAllFile(filePath, false);
-        try {
+            if (!(Boolean.getBoolean("skipJdbc")||projectMessage.isSkipJdbc())){
+                LOGGER.info("skipJdbc== false》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
+                createCode(projectMessage);
+            }
             Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
-            cfg.setDirectoryForTemplateLoading(new File(filePath));
             cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
-            for (String templatePath : allFile) {
-                StringBuilder classPath = new StringBuilder();
-                classPath.append(System.getProperty(USER_DIR)).append(SEPARATION);
-                if (!StringUtils.isEmpty(projectMessage.getModule())) {
-                    classPath.append(projectMessage.getModule());
-                }
-                String tempSubPath = templatePath.substring(templatePath.indexOf("/others/") + "/others/".length()).replace(FM_PERFIX, "");
-                classPath.append(MAVEN_SRC_FILE.concat(SEPARATION)).append(projectMessage.getProjectPackage().replace(".",SEPARATION))
-                    .append(SEPARATION).append(tempSubPath);
-                Template template = cfg.getTemplate(tempSubPath+".ftl");
-                File classFile = new File(classPath.toString());
-                if (!classFile.getParentFile().exists()){
-                    classFile.getParentFile().mkdirs();
-                }
-                Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(classPath.toString()))));
-                String packageName = projectMessage.getProjectPackage().concat(".").concat(tempSubPath.substring(0, tempSubPath
-                    .lastIndexOf('/')).replace("/", "."));
-                projectMessage.getOtherField().put("packageName",packageName);
-                template.process(projectMessage,out);
+            if (!(Boolean.getBoolean("skipBase")||projectMessage.isSkipBase())){
+                LOGGER.info("skipBase== false》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
+                String filePath = CodeGenerator.class.getClassLoader().getResource(GlobalConstant.CLOGBAL_DIR).getFile();
+                createBanner(projectMessage);
+                createMainClass(cfg,filePath,projectMessage);
+                createPom(cfg,filePath,projectMessage);
+                createProperties("bootstrap",cfg,filePath,projectMessage);
+                createProperties("application",cfg,filePath,projectMessage);
+                createReadme(cfg,filePath,projectMessage);
+                createLogback(cfg,filePath,projectMessage);
             }
-        } catch (IOException | TemplateException e) {
-            LOGGER.error("读取模板异常", e);
+            if (!(Boolean.getBoolean("skipConfig")||projectMessage.isSkipConfig())){
+                LOGGER.info("skipConfig== false》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
+                String filePath = CodeGenerator.class.getClassLoader().getResource(GlobalConstant.OTHER).getFile();
+                createConfig(cfg,filePath,projectMessage);
+            }
+        } catch (TemplateException | IOException e) {
+            e.printStackTrace();
         }
+
     }
 
 
 
-    private static List<String> getAllFile(String directoryPath, boolean isAddDirectory) {
-        List<String> list = new ArrayList<>();
-        File baseFile = new File(directoryPath);
-        if (baseFile.isFile() || !baseFile.exists()) {
-            return list;
-        }
-        File[] files = baseFile.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                if (isAddDirectory) {
-                    list.add(file.getAbsolutePath());
-                }
-                list.addAll(getAllFile(file.getAbsolutePath(), isAddDirectory));
-            } else if (file.getPath().endsWith(FM_PERFIX)){
-                list.add(file.getPath().replace("\\",SEPARATION));
-            }
-        }
-        return list;
-    }
 
 }

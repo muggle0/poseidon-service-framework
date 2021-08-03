@@ -10,4 +10,5 @@ public interface CodePath {
     String BANNER="/banner.txt";
     String README="/readme.md.ftl";
     String POM="/pom.xml.ftl";
+    String APPLICATION=".properties.ftl";
 }

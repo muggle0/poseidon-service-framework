@@ -18,7 +18,14 @@ import org.slf4j.LoggerFactory;
 public abstract class CodeGenerator {
 
 
-    private final ProjectMessage message;
+    private  ProjectMessage message;
+
+    public void init(ProjectMessage projectMessage){
+        this.message=projectMessage;
+    }
+
+    public CodeGenerator() {
+    }
 
     public CodeGenerator(ProjectMessage message) {
         this.message = message;

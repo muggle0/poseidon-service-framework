@@ -39,6 +39,12 @@ public class ProjectMessage {
      */
     private String suffix;
 
+    private boolean skipJdbc;
+
+    private boolean skipBase;
+
+    private boolean skipConfig;
+
     /**
      * 项目模块名
      */
@@ -61,26 +67,35 @@ public class ProjectMessage {
 
     private String parentPack;
 
-    /**
-     * 初始化类型，标准，简化，全部
-     */
-    private InitType initType;
 
     public static ProjectMessageBuilder builder() {
         return new ProjectMessageBuilder();
     }
 
-    public InitType getInitType() {
-        return initType;
+    public boolean isSkipConfig() {
+        return skipConfig;
     }
 
-    public void setInitType(InitType initType) {
-        this.initType = initType;
+    public void setSkipConfig(boolean skipConfig) {
+        this.skipConfig = skipConfig;
     }
 
-    public enum InitType {
-        NORMAL, SIMPLE, ALL
+    public boolean isSkipBase() {
+        return skipBase;
     }
+
+    public void setSkipBase(boolean skipBase) {
+        this.skipBase = skipBase;
+    }
+
+    public boolean isSkipJdbc() {
+        return skipJdbc;
+    }
+
+    public void setSkipJdbc(boolean skipJdbc) {
+        this.skipJdbc = skipJdbc;
+    }
+
 
     public static class ProjectMessageBuilder {
         private final ProjectMessage projectMessage;
@@ -89,10 +104,6 @@ public class ProjectMessage {
             this.projectMessage = new ProjectMessage();
         }
 
-        public ProjectMessageBuilder initType(InitType initType){
-            projectMessage.setInitType(initType);
-            return this;
-        }
         public ProjectMessageBuilder parentPack(String parentPack){
             projectMessage.setParentPack(parentPack);
             return this;
@@ -101,6 +112,20 @@ public class ProjectMessage {
             projectMessage.setOtherField(map);
             return this;
         }
+        public ProjectMessageBuilder skipJdbc(boolean skipJdbc){
+            projectMessage.setSkipJdbc(skipJdbc);
+            return this;
+        }
+        public ProjectMessageBuilder skipBase(boolean skipBase){
+            projectMessage.setSkipBase(skipBase);
+            return this;
+        }
+        public ProjectMessageBuilder skipConfig(boolean skipConfig){
+            projectMessage.setSkipConfig(skipConfig);
+            return this;
+        }
+
+
         public ProjectMessageBuilder driver(String driver){
             projectMessage.setDriver(driver);
             return this;
@@ -169,10 +194,6 @@ public class ProjectMessage {
             }
             if (projectMessage.getModule() == null) {
                 projectMessage.setModule("");
-            }
-
-            if (projectMessage.getInitType()==null){
-                projectMessage.setInitType(InitType.SIMPLE);
             }
             if (projectMessage.getOtherField()==null){
                 projectMessage.setOtherField(new HashMap<>());
