@@ -171,7 +171,7 @@ public class ProjectMessage {
             if (StringUtils.isEmpty(projectMessage.getAuthor())) {
                 throw new IllegalArgumentException("请设置作者 Author");
             }
-            if (!Boolean.getBoolean("skipJdbc")){
+            if (!(Boolean.getBoolean("skipJdbc")||projectMessage.isSkipJdbc())){
                 if (StringUtils.isEmpty(projectMessage.getDriver())) {
                     throw new IllegalArgumentException("请设置数据库驱动 driver");
                 }
