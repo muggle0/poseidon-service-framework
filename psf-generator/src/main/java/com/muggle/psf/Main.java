@@ -3,13 +3,15 @@ package com.muggle.psf;
 import com.muggle.psf.entity.ProjectMessage;
 import com.muggle.psf.factory.PoseidonCodeFactory;
 import com.muggle.psf.genera.SimpleCodeGenerator;
+import freemarker.template.TemplateException;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, TemplateException {
         Map<String, String> otherfield=new HashMap<>();
         otherfield.put("parentVersion","1.0-SNAPSHOT");
         ProjectMessage build = ProjectMessage.builder().author("muggle").driver("com.mysql.jdbc.Driver").username("root")

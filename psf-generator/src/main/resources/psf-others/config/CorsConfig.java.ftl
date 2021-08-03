@@ -1,4 +1,4 @@
-package ${otherField.packageName}
+package ${otherField.packageName};
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
