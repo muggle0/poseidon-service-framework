@@ -1,1 +1,0 @@
-CD .. && mvn -s "E:\data\maven\settings-al.xml" deploy:deploy-file -Dfile=libs/taobao-sdk-java-auto.jar -DgroupId=com.alibaba -DartifactId=ding-sdk -Dversion=1.0.0.RELEASE -Dpackaging=jar -Durl=https://repo.rdc.aliyun.com/repository/135664-release-agaluw/ -DrepositoryId=rdc-releases
