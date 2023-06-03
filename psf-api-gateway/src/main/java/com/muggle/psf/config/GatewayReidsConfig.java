@@ -9,12 +9,17 @@ import org.springframework.stereotype.Component;
  * Date 2023/6/3
  * Created by muggle
  */
-@ConditionalOnProperty(name = "gateway.api.serializ", havingValue = "nacos")
+@ConditionalOnProperty(prefix = "gateway", name = "api.serializ", havingValue = "redis")
 @Component
 @Slf4j
 public class GatewayReidsConfig implements GatewayConfig {
 
     public GatewayReidsConfig() {
         log.info("激活网关配置项》》》》 GatewayReidsConfig");
+    }
+
+    @Override
+    public void initListener() {
+        log.info("GatewayNacosConfig gateway route init ......");
     }
 }

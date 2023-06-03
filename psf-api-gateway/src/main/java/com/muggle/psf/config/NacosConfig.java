@@ -1,13 +1,13 @@
 package com.muggle.psf.config;
 
-import com.alibaba.nacos.api.NacosFactory;
+import com.alibaba.cloud.nacos.NacosConfigProperties;
 import com.alibaba.nacos.api.config.ConfigService;
-import com.alibaba.nacos.api.exception.NacosException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Properties;
 
 /**
  * Description
@@ -16,15 +16,19 @@ import java.util.Properties;
  */
 @Configuration
 @ConditionalOnProperty(name = "spring.cloud.nacos.config.enabled", matchIfMissing = true)
+@Slf4j
 public class NacosConfig {
 
 
     @Bean
-    public ConfigService configService() throws NacosException {
-        final Properties properties = new Properties();
-        final ConfigService configService = NacosFactory.createConfigService(properties);
-
-        return configService;
-
+    public ConfigService configService(final ApplicationContext context) {
+        log.info("NacosConfig init ConfigService 》》》》");
+        if (context.getParent() != null && BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
+            context.getParent(), NacosConfigProperties.class).length > 0) {
+            final NacosConfigProperties properties = BeanFactoryUtils.beanOfTypeIncludingAncestors(context.getParent(),
+                NacosConfigProperties.class);
+            return properties.configServiceInstance();
+        }
+        return new NacosConfigProperties().configServiceInstance();
     }
 }
