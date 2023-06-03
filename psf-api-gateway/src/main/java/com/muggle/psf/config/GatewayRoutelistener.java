@@ -7,8 +7,6 @@ import com.alibaba.nacos.api.exception.NacosException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.RouteDefinition;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
@@ -22,8 +20,8 @@ import java.util.concurrent.Executor;
  */
 @Slf4j
 @RequiredArgsConstructor
-@Component
-@DependsOn({"configService"})
+//@Component
+//@DependsOn({"configService"})
 public class GatewayRoutelistener {
     /* Nacos配置服务客户端 */
     private final ConfigService configService;
@@ -40,27 +38,27 @@ public class GatewayRoutelistener {
      * @Date 2022/9/13 11:54
      */
     @PostConstruct //bean构造完成后，会立即执行
-    public void init(){
+    public void init() {
         log.info("gateway route init ......");
         try {
-            String configInfo = configService.getConfig(
+            final String configInfo = configService.getConfig(
                 psfGatewayProperties.getNacosRouteDateId(),
                 psfGatewayProperties.getNacosRouteGroup(),
                 psfGatewayProperties.getDefaultTimeout()
             );
-            log.info("get current gateway config : {}",configInfo);
-            List<RouteDefinition> definitionList = JSON.parseArray(configInfo,RouteDefinition.class);
-            if (!CollectionUtils.isEmpty(definitionList)){
-                for (RouteDefinition definitionDefinition : definitionList){
-                    log.info("init gateway config {}",definitionDefinition.toString());
+            log.info("get current gateway config : {}", configInfo);
+            final List<RouteDefinition> definitionList = JSON.parseArray(configInfo, RouteDefinition.class);
+            if (!CollectionUtils.isEmpty(definitionList)) {
+                for (final RouteDefinition definitionDefinition : definitionList) {
+                    log.info("init gateway config {}", definitionDefinition.toString());
                     gatewayServer.addRouteDefinition(definitionDefinition);
                 }
             }
-        }catch (Exception e) {
-            log.error("gateway route init has some error: {}",e.getMessage(),e);
+        } catch (final Exception e) {
+            log.error("gateway route init has some error: {}", e.getMessage(), e);
         }
         //设置监听器
-        dynamicRouteByNacosListener(psfGatewayProperties.getNacosRouteDateId(), psfGatewayProperties.getNacosRouteGroup());
+        this.dynamicRouteByNacosListener(psfGatewayProperties.getNacosRouteDateId(), psfGatewayProperties.getNacosRouteGroup());
     }
 
 
@@ -71,7 +69,7 @@ public class GatewayRoutelistener {
      * @Author JiaChaoYang
      * @Date 2022/9/13 11:17
      */
-    private void dynamicRouteByNacosListener(String dataId , String group){
+    private void dynamicRouteByNacosListener(final String dataId, final String group) {
         try {
 
             //给nacosconfig客户端增加一个监听器
@@ -82,6 +80,7 @@ public class GatewayRoutelistener {
                     //为null是默认的线程池
                     return null;
                 }
+
                 /**
                  * @Description 监听器收到配置更新
                  * @Params [s] nacos中最新的配置定义
@@ -90,17 +89,17 @@ public class GatewayRoutelistener {
                  * @Date 2022/9/13 11:21
                  */
                 @Override
-                public void receiveConfigInfo(String s) {
-                    log.info("start to update config : ",s);
+                public void receiveConfigInfo(final String s) {
+                    log.info("start to update config : ", s);
                     //接收最新的路由定义配置
-                    List<RouteDefinition> definitionList = JSON.parseArray(s,RouteDefinition.class);
-                    log.info("update route : {}",definitionList.toString());
+                    final List<RouteDefinition> definitionList = JSON.parseArray(s, RouteDefinition.class);
+                    log.info("update route : {}", definitionList.toString());
                     //更新路由配置
                     gatewayServer.updateList(definitionList);
                 }
             });
-        }catch (NacosException e) {
-            log.error("dynamic update gateway config error: {}",e.getMessage(),e);
+        } catch (final NacosException e) {
+            log.error("dynamic update gateway config error: {}", e.getMessage(), e);
         }
     }
 }
