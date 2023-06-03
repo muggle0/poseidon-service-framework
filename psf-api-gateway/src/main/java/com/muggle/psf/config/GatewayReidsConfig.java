@@ -1,18 +1,23 @@
 package com.muggle.psf.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Description
@@ -25,11 +30,17 @@ import java.util.Date;
 @EnableScheduling
 public class GatewayReidsConfig implements GatewayConfig, SchedulingConfigurer {
 
-    @Value("${gateway.api.serializ.cron:*/10 * * * * ?}")
+    @Value("${gateway.api.cron:*/10 * * * * ?}")
     private String gatewayCron;
+
+    @Value("${gateway.api.key}")
+    private String gatewayKey;
 
     @Resource
     RedissonClient redissonClient;
+
+    @Resource
+    private GatewayServer gatewayServer;
 
     public GatewayReidsConfig() {
         log.info("激活网关配置项》》》》 GatewayReidsConfig");
@@ -42,7 +53,12 @@ public class GatewayReidsConfig implements GatewayConfig, SchedulingConfigurer {
     }
 
     public void refreshGateway() {
-
+        final RBucket<List<RouteDefinition>> bucket = redissonClient.getBucket(gatewayKey);
+        if (Objects.isNull(bucket) || !CollectionUtils.isEmpty(bucket.get())) {
+            log.debug("refreshGateway list null");
+            return;
+        }
+        gatewayServer.updateList(bucket.get());
     }
 
     @Override
