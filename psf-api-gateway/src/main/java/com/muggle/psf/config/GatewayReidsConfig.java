@@ -1,11 +1,14 @@
 package com.muggle.psf.config;
 
+import com.alibaba.fastjson.JSONArray;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RBucket;
-import org.redisson.api.RedissonClient;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.route.RouteDefinition;
+import org.springframework.cloud.gateway.route.RouteDefinitionRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -13,6 +16,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -33,14 +37,13 @@ public class GatewayReidsConfig implements GatewayConfig, SchedulingConfigurer {
     @Value("${gateway.api.cron:*/10 * * * * ?}")
     private String gatewayCron;
 
-    @Value("${gateway.api.key}")
-    private String gatewayKey;
+    private String ROUTE_MD5;
 
     @Resource
-    RedissonClient redissonClient;
+    private RouteDefinitionRepository routeDefinitionRepository;
 
     @Resource
-    private GatewayServer gatewayServer;
+    private ApplicationEventPublisher publisher;
 
     public GatewayReidsConfig() {
         log.info("激活网关配置项》》》》 GatewayReidsConfig");
@@ -49,16 +52,26 @@ public class GatewayReidsConfig implements GatewayConfig, SchedulingConfigurer {
     @Override
     public void initListener() {
         log.info("GatewayNacosConfig gateway route init ......");
+
         this.refreshGateway();
     }
 
     public void refreshGateway() {
-        final RBucket<List<RouteDefinition>> bucket = redissonClient.getBucket(gatewayKey);
-        if (Objects.isNull(bucket) || !CollectionUtils.isEmpty(bucket.get())) {
-            log.debug("refreshGateway list null");
+        final Flux<RouteDefinition> routeDefinitions = routeDefinitionRepository.getRouteDefinitions();
+        final List<RouteDefinition> routeList = routeDefinitions.collectList().block();
+        if (Objects.isNull(ROUTE_MD5) && CollectionUtils.isEmpty(routeList)) {
             return;
         }
-        gatewayServer.updateList(bucket.get());
+        if (Objects.isNull(ROUTE_MD5) && !CollectionUtils.isEmpty(routeList)) {
+            publisher.publishEvent(new RefreshRoutesEvent(routeDefinitionRepository));
+            ROUTE_MD5 = DigestUtils.md5Hex(JSONArray.toJSONString(routeList));
+            return;
+        }
+        final String redisMD5 = DigestUtils.md5Hex(JSONArray.toJSONString(routeList));
+        if (!Objects.equals(redisMD5, ROUTE_MD5)) {
+            publisher.publishEvent(new RefreshRoutesEvent(routeDefinitionRepository));
+            ROUTE_MD5 = redisMD5;
+        }
     }
 
     @Override
