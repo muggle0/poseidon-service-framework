@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.exception.NacosException;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.muggle.psf.gateway.properties.PsfGatewayProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +39,7 @@ public class NacosRouteDefinitionRepository implements RouteDefinitionRepository
 
 
     @Override
+    @Cached(cacheType = CacheType.LOCAL)
     public Flux<RouteDefinition> getRouteDefinitions() {
         try {
             final String configInfo = configService.getConfig(psfGatewayProperties.getNacosRouteDateId(),

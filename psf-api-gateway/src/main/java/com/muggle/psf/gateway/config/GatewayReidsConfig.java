@@ -50,9 +50,8 @@ public class GatewayReidsConfig implements GatewayConfig, SchedulingConfigurer {
     }
 
     @Override
-    public void initListener() {
+    public void run(final String... args) {
         log.info("GatewayNacosConfig gateway route init ......");
-
         this.refreshGateway();
     }
 

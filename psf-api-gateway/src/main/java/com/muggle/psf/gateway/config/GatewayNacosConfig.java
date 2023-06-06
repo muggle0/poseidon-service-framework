@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.concurrent.Executor;
 
@@ -49,12 +48,6 @@ public class GatewayNacosConfig implements GatewayConfig {
         log.info("激活网关配置项》》》》 GatewayNacosConfig");
     }
 
-    @Override
-    @PostConstruct
-    public void initListener() {
-        this.dynamicRouteByNacosListener(psfGatewayProperties.getNacosRouteDateId(), psfGatewayProperties.getNacosRouteGroup());
-    }
-
 
     private void dynamicRouteByNacosListener(final String dataId, final String group) {
         try {
@@ -75,5 +68,10 @@ public class GatewayNacosConfig implements GatewayConfig {
         } catch (final NacosException e) {
             log.error("dynamic update gateway config error: {}", e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void run(final String... args) throws Exception {
+        this.dynamicRouteByNacosListener(psfGatewayProperties.getNacosRouteDateId(), psfGatewayProperties.getNacosRouteGroup());
     }
 }

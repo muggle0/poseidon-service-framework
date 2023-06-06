@@ -1,5 +1,7 @@
 package com.muggle.psf.gateway.repository;
 
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
@@ -32,6 +34,7 @@ public class RedisRouteDefinitionRepository implements RouteDefinitionRepository
     @Value("${gateway.api.key}")
     private String gatewayKey;
 
+    @Cached(cacheType = CacheType.LOCAL)
     @Override
     public Flux<RouteDefinition> getRouteDefinitions() {
         final RMap<String, RouteDefinition> routeMap = redissonClient.getMap(gatewayKey);

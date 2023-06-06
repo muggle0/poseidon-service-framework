@@ -1,4 +1,6 @@
-package com.muggle.psf.gateway.service;
+package com.muggle.psf.gateway.service.impl;
+
+import com.muggle.psf.gateway.service.BlockListService;
 
 /**
  * Description 黑名单服务
