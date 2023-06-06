@@ -1,8 +1,10 @@
 package com.muggle.psf.gateway.repository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.route.InMemoryRouteDefinitionRepository;
 import org.springframework.cloud.gateway.route.RouteDefinition;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -11,8 +13,8 @@ import reactor.core.publisher.Mono;
  * Date 2023/6/6
  * Created by muggle
  */
-//@ConditionalOnProperty(prefix = "gateway", name = "api.serializ", havingValue = "test")
-//@Component
+@ConditionalOnProperty(prefix = "gateway", name = "api.serializ", havingValue = "test")
+@Component
 @Slf4j
 public class TestRouteDefinitionRepository extends InMemoryRouteDefinitionRepository {
     @Override

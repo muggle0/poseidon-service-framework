@@ -1,6 +1,7 @@
 package com.muggle.psf.gateway.config;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alicp.jetcache.anno.CacheInvalidate;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +35,7 @@ import java.util.Objects;
 @EnableScheduling
 public class GatewayReidsConfig implements GatewayConfig, SchedulingConfigurer {
 
-    @Value("${gateway.api.cron:*/10 * * * * ?}")
+    @Value("${gateway.api.cron:*/30 * * * * ?}")
     private String gatewayCron;
 
     private String ROUTE_MD5;
@@ -55,6 +56,7 @@ public class GatewayReidsConfig implements GatewayConfig, SchedulingConfigurer {
         this.refreshGateway();
     }
 
+    @CacheInvalidate(name = GatewayConfig.REDIS_ROUTE_CACHE_KEY)
     public void refreshGateway() {
         final Flux<RouteDefinition> routeDefinitions = routeDefinitionRepository.getRouteDefinitions();
         final List<RouteDefinition> routeList = routeDefinitions.collectList().block();

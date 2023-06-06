@@ -62,6 +62,7 @@ public class GatewayNacosConfig implements GatewayConfig {
 
                 @Override
                 public void receiveConfigInfo(final String config) {
+                    ((NacosRouteDefinitionRepository) routeDefinitionRepository).invalidateCache();
                     publisher.publishEvent(new RefreshRoutesEvent(nacosRouteDefinitionRepository));
                 }
             });

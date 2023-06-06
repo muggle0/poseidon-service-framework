@@ -9,5 +9,8 @@ import org.springframework.boot.CommandLineRunner;
  */
 public interface GatewayConfig extends CommandLineRunner {
 
+    String NACOS_ROUTE_CACHE_KEY = "nacos:route:gateway:cache";
+
+    String REDIS_ROUTE_CACHE_KEY = "redis:route:gateway:cache";
 
 }
