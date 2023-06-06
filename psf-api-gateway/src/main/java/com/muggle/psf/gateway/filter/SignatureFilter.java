@@ -70,8 +70,9 @@ public class SignatureFilter implements GlobalFilter {
             signatureHandler.checkSign(request, properties);
         } catch (final GatewayException e) {
             final ResultBean<Object> error = ResultBean.error(e.getMessage(), e.getCode());
-            final byte[] bytes = JSON.toJSONString(error).getBytes(Charset.forName("GBK"));
+            final byte[] bytes = JSON.toJSONString(error).getBytes(Charset.forName("utf-8"));
             final ServerHttpResponse response = exchange.getResponse();
+            response.getHeaders().add("Content-Type", "application/json;charset=utf-8");
             final DataBuffer buffer = response.bufferFactory().wrap(bytes);
             return response.writeWith(Mono.just(buffer));
         }
