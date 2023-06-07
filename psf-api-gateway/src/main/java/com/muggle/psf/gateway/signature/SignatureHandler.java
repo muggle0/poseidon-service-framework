@@ -39,17 +39,17 @@ public interface SignatureHandler {
                 builder.appSecret(appsecret);
             }
         });
-        Optional.ofNullable(headers.get(properties.getAppsecret())).ifPresent(nonces -> {
+        Optional.ofNullable(headers.get(properties.getNonce())).ifPresent(nonces -> {
             for (final String nonce : nonces) {
                 builder.nonce(nonce);
             }
         });
-        Optional.ofNullable(headers.get(properties.getAppsecret())).ifPresent(signatures -> {
+        Optional.ofNullable(headers.get(properties.getSignature())).ifPresent(signatures -> {
             for (final String signature : signatures) {
                 builder.requestSignature(signature);
             }
         });
-        Optional.ofNullable(headers.get(properties.getAppsecret())).ifPresent(timestamps -> {
+        Optional.ofNullable(headers.get(properties.getTimestamp())).ifPresent(timestamps -> {
             for (final String timestamp : timestamps) {
                 builder.timestamp(timestamp);
             }

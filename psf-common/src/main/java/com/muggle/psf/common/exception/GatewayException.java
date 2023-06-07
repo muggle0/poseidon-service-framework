@@ -12,7 +12,7 @@ public class GatewayException extends BasePoseidonException {
 
     public GatewayException(final String message) {
         super(message);
-        this.code = 5001;
+        this.code = 50001;
     }
 
     public GatewayException(final String message, final Integer code) {

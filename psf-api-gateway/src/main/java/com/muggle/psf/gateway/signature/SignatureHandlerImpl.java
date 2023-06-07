@@ -33,7 +33,7 @@ public class SignatureHandlerImpl implements SignatureHandler {
     @Override
     public Object beforeCheckResult(final SignatureParameter parameter) {
         final String appNonce = parameter.getNonce();
-        if (!Objects.equals(nonce, appNonce) || !Objects.isNull(parameter.getAppId())) {
+        if (!Objects.equals(nonce, appNonce) || Objects.isNull(parameter.getAppId())) {
             throw new GatewayException("网关鉴权失败，请校验参数");
         }
         final String secert = secretService.getSecertByAppId(parameter.getAppId(), parameter.getNonce());
@@ -67,5 +67,10 @@ public class SignatureHandlerImpl implements SignatureHandler {
         final MessageDigest md = MessageDigest.getInstance("SHA-256");
         final byte[] d = md.digest(decondeStr.getBytes(StandardCharsets.UTF_8));
         return DatatypeConverter.printHexBinary(d).toUpperCase();
+    }
+
+    public static void main(final String[] args) {
+
+        System.out.println(System.currentTimeMillis());
     }
 }
