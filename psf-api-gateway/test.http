@@ -4,7 +4,7 @@ GET http://localhost:8080/index.html
 GET http://localhost:8080/index
 x-nonce: psf
 signature: F87966607F4EC24F3009CB8CEF37BF3E1AC7B42F893A418334801BC79056C8B0
-timestamp: 1686129686413
+timestamp: 1686129686
 appId: poseiodon
 appSecret: e27ac5cb-3ea6-43dd-8c02-d05fe0a2ecb6
 

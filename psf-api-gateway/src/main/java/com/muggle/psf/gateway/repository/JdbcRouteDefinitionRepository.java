@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -42,13 +43,17 @@ public class JdbcRouteDefinitionRepository implements RouteDefinitionRepository 
     @Cached(cacheType = CacheType.REMOTE, name = GatewayConfig.JDBC_ROUTE_CACHE_KEY)
     @Override
     public Flux<RouteDefinition> getRouteDefinitions() {
-        final String sql = "SELECT c.`value` FROM psf_config c WHERE c.`type`='%s' AND c.`scope`='%s'";
-        final String secret = jdbcTemplate.queryForObject(String.format(sql, ConfigTypeEnum.GATEWAY.getCode(), scope, "ROUTE"), String.class);
-        if (StringUtils.isEmpty(secret)) {
+        try {
+            final String sql = "SELECT c.`value` FROM psf_config c WHERE c.`type`='%s' AND c.`scope`='%s'";
+            final String secret = jdbcTemplate.queryForObject(String.format(sql, ConfigTypeEnum.GATEWAY.getCode(), scope, "ROUTE"), String.class);
+            if (StringUtils.isEmpty(secret)) {
+                return Flux.empty();
+            }
+            final List<RouteDefinition> routeDefinitions = JSONArray.parseArray(secret, RouteDefinition.class);
+            return Flux.fromIterable(routeDefinitions);
+        } catch (final EmptyResultDataAccessException e) {
             return Flux.empty();
         }
-        final List<RouteDefinition> routeDefinitions = JSONArray.parseArray(secret, RouteDefinition.class);
-        return Flux.fromIterable(routeDefinitions);
     }
 
     @Override

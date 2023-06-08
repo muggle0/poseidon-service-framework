@@ -48,7 +48,7 @@ public class SignatureHandlerImpl implements SignatureHandler {
         try {
             final long requestTimestamp = Long.parseLong(parameter.getTimestamp());
             final long currentTimestamp = System.currentTimeMillis() / 1000L;
-            if (currentTimestamp - requestTimestamp > (long) 1800L) {
+            if (currentTimestamp - requestTimestamp > 300L) {
                 throw new GatewayException("请求超时");
             }
             final String signature = getSignature(parameter);
