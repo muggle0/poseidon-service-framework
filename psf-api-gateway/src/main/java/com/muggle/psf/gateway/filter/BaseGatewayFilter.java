@@ -25,8 +25,11 @@ public abstract class BaseGatewayFilter implements GlobalFilter {
         this.properties = properties;
     }
 
+    public abstract void beforeProcess(ServerWebExchange exchange);
+
     @Override
     public Mono<Void> filter(final ServerWebExchange exchange, final GatewayFilterChain chain) {
+        this.beforeProcess(exchange);
         final AntPathMatcher antPathMatcher = new AntPathMatcher();
         final ServerHttpRequest request = exchange.getRequest();
         final URI uri = request.getURI();

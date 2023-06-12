@@ -11,4 +11,6 @@ import org.springframework.web.server.ServerWebExchange;
 public interface AuthService {
 
     boolean isAuth(ServerWebExchange exchange);
+
+    String getUsercode(final ServerWebExchange exchange);
 }

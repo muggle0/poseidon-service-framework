@@ -46,7 +46,12 @@ public class SignatureFilter extends BaseGatewayFilter {
 
 
     @Override
-    protected Mono<Void> afterProcess(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public void beforeProcess(final ServerWebExchange exchange) {
+
+    }
+
+    @Override
+    protected Mono<Void> afterProcess(final ServerWebExchange exchange, final GatewayFilterChain chain) {
         try {
             final ServerHttpRequest request = exchange.getRequest();
             signatureHandler.checkSign(request, properties);

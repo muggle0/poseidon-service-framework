@@ -5,5 +5,8 @@ package com.muggle.psf.gateway.service;
  * Date 2023/6/3
  * Created by muggle
  */
-public interface BlockListService {
+public interface BlackListService {
+    boolean isBlackUser(String usercode);
+
+    boolean isBlackIp(String ip);
 }

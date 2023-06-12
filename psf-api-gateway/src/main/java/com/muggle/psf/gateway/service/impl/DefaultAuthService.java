@@ -31,16 +31,26 @@ public class DefaultAuthService implements AuthService {
 
     @Override
     public boolean isAuth(final ServerWebExchange exchange) {
+        final String token = this.getToken(exchange);
+        if (StringUtils.isEmpty(token)) {
+            return false;
+        }
+        // todo
+        return true;
+    }
+
+    private String getToken(final ServerWebExchange exchange) {
         final ServerHttpRequest request = exchange.getRequest();
         final List<String> tokenHeaders = request.getHeaders().get(tokenHead);
         String token = null;
         for (final String tokenHeader : tokenHeaders) {
             token = tokenHeader;
         }
-        if (StringUtils.isEmpty(token)) {
-            return false;
-        }
-        // todo
-        return true;
+        return token;
+    }
+
+    @Override
+    public String getUsercode(final ServerWebExchange exchange) {
+        return null;
     }
 }
