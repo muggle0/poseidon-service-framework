@@ -49,7 +49,7 @@ public class SignatureHandlerImpl implements SignatureHandler {
             final long requestTimestamp = Long.parseLong(parameter.getTimestamp());
             final long currentTimestamp = System.currentTimeMillis() / 1000L;
             if (currentTimestamp - requestTimestamp > 300L) {
-                throw new GatewayException("请求超时");
+                throw new GatewayException("时间戳超时");
             }
             final String signature = getSignature(parameter);
             if (!Objects.equals(signature, parameter.getRequestSignature())) {
@@ -69,8 +69,4 @@ public class SignatureHandlerImpl implements SignatureHandler {
         return DatatypeConverter.printHexBinary(d).toUpperCase();
     }
 
-    public static void main(final String[] args) {
-
-        System.out.println(System.currentTimeMillis());
-    }
 }

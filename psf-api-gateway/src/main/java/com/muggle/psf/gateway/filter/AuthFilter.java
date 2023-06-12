@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
 @Slf4j
 @Component
 @ConditionalOnProperty(prefix = "gateway", name = "api.auth.enabled", havingValue = "true", matchIfMissing = true)
-@Order(1)
+@Order(2)
 public class AuthFilter extends BaseGatewayFilter {
 
 
