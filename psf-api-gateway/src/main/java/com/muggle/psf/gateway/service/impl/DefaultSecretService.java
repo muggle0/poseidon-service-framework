@@ -5,10 +5,8 @@ import com.alicp.jetcache.anno.Cached;
 import com.muggle.psf.gateway.service.SecretService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 
 /**
  * Description
@@ -16,9 +14,7 @@ import org.springframework.stereotype.Component;
  * Created by muggle
  */
 
-@Component
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@ConditionalOnMissingBean
 public class DefaultSecretService implements SecretService {
 
     private final JdbcTemplate jdbcTemplate;

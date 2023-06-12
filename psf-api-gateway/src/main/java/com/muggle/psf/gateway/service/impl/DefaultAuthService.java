@@ -4,10 +4,7 @@ import com.muggle.psf.gateway.properties.PsfHeadkeyProperties;
 import com.muggle.psf.gateway.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -18,13 +15,10 @@ import java.util.List;
  * Date 2023/6/8
  * Created by muggle
  */
-@Component
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@ConditionalOnMissingBean
 public class DefaultAuthService implements AuthService {
 
-    @Value("${gateway.api.header.token}")
-    private String tokenHead;
+    private final String tokenHead;
 
     private final PsfHeadkeyProperties properties;
 
