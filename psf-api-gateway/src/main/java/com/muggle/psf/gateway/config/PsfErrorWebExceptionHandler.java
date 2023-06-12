@@ -1,5 +1,6 @@
 package com.muggle.psf.gateway.config;
 
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSONObject;
 import com.muggle.psf.common.result.ResultBean;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
@@ -69,6 +70,9 @@ public class PsfErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler
      */
     private Map<String, Object> buildMessage(final int code, final ServerRequest request, final Throwable ex) {
         final ResultBean<Object> error = ResultBean.error(ex.getMessage(), code);
+        if (ex instanceof BlockException) {
+            error.setMessage("请求限流");
+        }
         return JSONObject.parseObject(JSONObject.toJSONString(error), Map.class);
     }
 
