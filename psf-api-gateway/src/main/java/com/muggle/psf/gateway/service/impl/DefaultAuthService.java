@@ -5,6 +5,7 @@ import com.muggle.psf.gateway.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -37,6 +38,9 @@ public class DefaultAuthService implements AuthService {
         final ServerHttpRequest request = exchange.getRequest();
         final List<String> tokenHeaders = request.getHeaders().get(tokenHead);
         String token = null;
+        if (CollectionUtils.isEmpty(tokenHeaders)) {
+            return token;
+        }
         for (final String tokenHeader : tokenHeaders) {
             token = tokenHeader;
         }
