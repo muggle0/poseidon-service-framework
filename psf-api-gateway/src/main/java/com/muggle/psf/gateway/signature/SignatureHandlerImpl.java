@@ -33,11 +33,12 @@ public class SignatureHandlerImpl implements SignatureHandler {
     @Override
     public Object beforeCheckResult(final SignatureParameter parameter) {
         final String appNonce = parameter.getNonce();
-        if (!Objects.equals(nonce, appNonce) || Objects.isNull(parameter.getAppId())) {
+        if (!Objects.equals(nonce, appNonce) || Objects.isNull(parameter.getAppId())
+            || Objects.isNull(parameter.getAppSecret()) || Objects.isNull(parameter.getTimestamp())) {
             throw new GatewayException("网关鉴权失败，请校验参数");
         }
         final String secert = secretService.getSecertByAppId(parameter.getAppId(), parameter.getNonce());
-        if (Objects.isNull(secert)) {
+        if (Objects.isNull(secert) || !Objects.equals(secert, parameter.getAppSecret())) {
             throw new GatewayException("网关鉴权失败，请校验凭证");
         }
         return null;
@@ -63,7 +64,8 @@ public class SignatureHandlerImpl implements SignatureHandler {
 
 
     public static String getSignature(final SignatureParameter parameter) throws NoSuchAlgorithmException {
-        final String decondeStr = parameter.getAppId().concat(parameter.getNonce()).concat(parameter.getTimestamp());
+        final String decondeStr = parameter.getAppId().concat(parameter.getNonce()).concat(parameter.getTimestamp())
+            .concat(parameter.getAppSecret());
         final MessageDigest md = MessageDigest.getInstance("SHA-256");
         final byte[] d = md.digest(decondeStr.getBytes(StandardCharsets.UTF_8));
         return DatatypeConverter.printHexBinary(d).toUpperCase();

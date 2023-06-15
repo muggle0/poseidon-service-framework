@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.filter.NettyWriteResponseFilter;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -29,7 +30,7 @@ import java.nio.charset.Charset;
 @Slf4j
 @Component
 @ConditionalOnProperty(prefix = "gateway", name = "api.signature.enabled", havingValue = "true", matchIfMissing = true)
-@Order(1)
+@Order(NettyWriteResponseFilter.WRITE_RESPONSE_FILTER_ORDER - 3)
 public class SignatureFilter extends BaseGatewayFilter {
 
     private final PsfHeadkeyProperties properties;
@@ -56,6 +57,7 @@ public class SignatureFilter extends BaseGatewayFilter {
             final ServerHttpRequest request = exchange.getRequest();
             signatureHandler.checkSign(request, properties);
         } catch (final GatewayException e) {
+            log.error("SignatureFilter error", e);
             final ResultBean<Object> error = ResultBean.error(e.getMessage(), e.getCode());
             final byte[] bytes = JSON.toJSONString(error).getBytes(Charset.forName("utf-8"));
             final ServerHttpResponse response = exchange.getResponse();

@@ -10,9 +10,16 @@ import com.muggle.psf.gateway.service.impl.DefaultSecretService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.StringUtils;
+
+import java.time.Duration;
 
 /**
  * Description
@@ -21,6 +28,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 @Configuration
 public class CommonConfig {
+
     @Value("${gateway.api.header.token}")
     private String tokenHead;
 
@@ -47,4 +55,33 @@ public class CommonConfig {
     public SecretService secretService() {
         return new DefaultSecretService(jdbcTemplate);
     }
+
+
+    @Bean
+    @ConfigurationProperties(prefix = "spring.messages")
+    public MessageSourceProperties messageSourceProperties() {
+        return new MessageSourceProperties();
+    }
+
+    @Bean
+    public MessageSource messageSource(final MessageSourceProperties properties) {
+        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        if (StringUtils.hasText(properties.getBasename())) {
+            messageSource.setBasenames(StringUtils
+                .commaDelimitedListToStringArray(StringUtils.trimAllWhitespace(properties.getBasename())));
+        }
+        if (properties.getEncoding() != null) {
+            messageSource.setDefaultEncoding(properties.getEncoding().name());
+        }
+        messageSource.setFallbackToSystemLocale(properties.isFallbackToSystemLocale());
+        final Duration cacheDuration = properties.getCacheDuration();
+        if (cacheDuration != null) {
+            messageSource.setCacheMillis(cacheDuration.toMillis());
+        }
+        messageSource.setAlwaysUseMessageFormat(properties.isAlwaysUseMessageFormat());
+        messageSource.setUseCodeAsDefaultMessage(true);
+        return messageSource;
+    }
+
+
 }

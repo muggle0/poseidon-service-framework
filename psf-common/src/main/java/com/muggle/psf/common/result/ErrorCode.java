@@ -6,4 +6,7 @@ package com.muggle.psf.common.result;
  * @Date: 2020/11/9
  **/
 public class ErrorCode {
+
+    public static final String SYSTEM = "system error";
+
 }

@@ -19,15 +19,13 @@ public interface SignatureHandler {
 
     default Object checkSign(final ServerHttpRequest request, final PsfHeadkeyProperties properties) {
         final HttpHeaders headers = request.getHeaders();
-
         final SignatureParameter parameter = buildSignParameter(headers, properties);
-
         final Object before = this.beforeCheckResult(parameter);
         final Object after = this.afterCheckResult(parameter, before);
         return after;
     }
 
-    public static SignatureParameter buildSignParameter(final HttpHeaders headers, final PsfHeadkeyProperties properties) {
+    static SignatureParameter buildSignParameter(final HttpHeaders headers, final PsfHeadkeyProperties properties) {
         final SignatureParameter.SignatureParameterBuilder builder = SignatureParameter.builder();
         Optional.ofNullable(headers.get(properties.getAppid())).ifPresent(appids -> {
             for (final String appid : appids) {

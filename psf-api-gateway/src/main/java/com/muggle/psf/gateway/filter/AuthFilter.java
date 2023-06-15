@@ -5,16 +5,12 @@ import com.muggle.psf.common.result.ResultBean;
 import com.muggle.psf.gateway.properties.PsfHeadkeyProperties;
 import com.muggle.psf.gateway.service.AuthService;
 import com.muggle.psf.gateway.service.BlackListService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -25,23 +21,16 @@ import java.nio.charset.Charset;
  * Date 2023/6/7
  * Created by muggle
  */
-@Slf4j
-@Component
-@ConditionalOnProperty(prefix = "gateway", name = "api.auth.enabled", havingValue = "true", matchIfMissing = true)
-@Order(2)
-public class AuthFilter extends BaseGatewayFilter {
 
+public class AuthFilter extends BaseGatewayFilter implements GatewayFilter {
 
-    private PsfHeadkeyProperties properties;
 
     private AuthService authService;
 
     private BlackListService blackListService;
 
-    @Autowired
-    public AuthFilter(final PsfHeadkeyProperties properties, final PsfHeadkeyProperties properties1, final AuthService authService, final BlackListService blackListService) {
-        super(properties);
-        this.properties = properties1;
+    public AuthFilter(final PsfHeadkeyProperties psfHeadkeyProperties, final AuthService authService, final BlackListService blackListService) {
+        super(psfHeadkeyProperties);
         this.authService = authService;
         this.blackListService = blackListService;
     }

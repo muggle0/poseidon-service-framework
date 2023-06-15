@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -35,16 +36,20 @@ public class ErrorHandlerConfig {
 
     private final ServerCodecConfigurer serverCodecConfigurer;
 
+    private final MessageSource messageSource;
+
     public ErrorHandlerConfig(final ServerProperties serverProperties,
                               final ResourceProperties resourceProperties,
                               final ObjectProvider<List<ViewResolver>> viewResolversProvider,
                               final ServerCodecConfigurer serverCodecConfigurer,
-                              final ApplicationContext applicationContext) {
+                              final ApplicationContext applicationContext,
+                              final MessageSource messageSource) {
         this.serverProperties = serverProperties;
         this.applicationContext = applicationContext;
         this.resourceProperties = resourceProperties;
         this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
         this.serverCodecConfigurer = serverCodecConfigurer;
+        this.messageSource = messageSource;
     }
 
     @Bean
@@ -54,7 +59,7 @@ public class ErrorHandlerConfig {
             errorAttributes,
             this.resourceProperties,
             this.serverProperties.getError(),
-            this.applicationContext);
+            this.applicationContext, messageSource);
         exceptionHandler.setViewResolvers(this.viewResolvers);
         exceptionHandler.setMessageWriters(this.serverCodecConfigurer.getWriters());
         exceptionHandler.setMessageReaders(this.serverCodecConfigurer.getReaders());
