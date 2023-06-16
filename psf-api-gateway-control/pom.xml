@@ -11,7 +11,7 @@
     <groupId>com.muggle</groupId>
     <artifactId>psf-api-gateway-control</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>psf-api-gateway</name>
+    <name>psf-api-gateway-control</name>
     <description>服务网关 控制端</description>
 
     <properties>
@@ -38,10 +38,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>apach-maven</artifactId>
-            </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>

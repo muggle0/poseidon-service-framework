@@ -10,31 +10,23 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.6.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.muggle</groupId>
+        <artifactId>psf-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <dependencies>
-        <!-- <dependency>
-             <groupId>com.muggle</groupId>
-             <artifactId>poseidon-boot-starter</artifactId>
-             <version>1.0.0.Beta</version>
-         </dependency> -->
+        <dependency>
+            <groupId>com.muggle</groupId>
+            <artifactId>psf-boot-starter</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <groupId>com.muggle</groupId>
+            <artifactId>psf-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -62,11 +54,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>ding-sdk</artifactId>
-            <version>1.0.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -106,6 +93,19 @@
             <version>3.13.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct-jdk8 -->
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -126,8 +126,7 @@
             <dependencies>
                 <dependency>
                     <groupId>com.muggle</groupId>
-                    <artifactId>poseidon-generator-ui</artifactId>
-                    <version>1.0.0-release</version>
+                    <artifactId>psf-generator-ui</artifactId>
                 </dependency>
             </dependencies>
         </profile>
