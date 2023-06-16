@@ -41,13 +41,4 @@ public class SecretKeyUtils {
         final String decryptStr = aes.decryptStr(data);
         return decryptStr;
     }
-
-    public static void main(final String[] args) {
-        final String s = encryptFromString("xxxxxxxxxxxx", "xx");
-        System.out.println(s);
-        final String xx = decryptFromString(s, "xx");
-        System.out.println(xx);
-
-
-    }
 }
