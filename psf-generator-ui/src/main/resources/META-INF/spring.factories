@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.muggle.psf.genera.ui.controller.CodeController,\
 com.muggle.psf.genera.ui.config.GeneratorWebMvcConfig

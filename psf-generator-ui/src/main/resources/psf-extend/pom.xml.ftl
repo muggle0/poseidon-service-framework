@@ -129,12 +129,29 @@
                     <artifactId>psf-generator-ui</artifactId>
                 </dependency>
             </dependencies>
+            <properties>
+                <logbackConf>
+                    <![CDATA[
+                    <appender-ref ref="console"/>
+                    ]]>
+                </logbackConf>
+            </properties>
         </profile>
         <profile>
             <id>normal</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <logbackConf>
+                    <![CDATA[
+                    <appender-ref ref="stash"/>
+                    <appender-ref ref="logs-asyn"/>
+                    <appender-ref ref="debug"/>
+                    <appender-ref ref="error"/>
+                    ]]>
+                </logbackConf>
+            </properties>
         </profile>
     </profiles>
     <build>

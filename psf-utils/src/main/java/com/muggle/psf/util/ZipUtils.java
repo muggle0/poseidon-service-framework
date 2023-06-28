@@ -1,4 +1,4 @@
-package com.muggle.psf.genera.ui.psf.util;
+package com.muggle.psf.util;
 
 
 import java.io.ByteArrayInputStream;

@@ -1,4 +1,4 @@
-package com.muggle.psf.genera.ui.psf.util;
+package com.muggle.psf.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;

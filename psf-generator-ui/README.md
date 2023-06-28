@@ -11,16 +11,6 @@
 
 ```
 
-注入bean:
-
-```java
-    @Bean
-    @Profile("local")
-    public CodeController codeController(){
-        return new CodeController();
-    }
-```
-
 访问接口：
 {baseurl}/poseidon-ui/index.html
 

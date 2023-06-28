@@ -1,5 +1,5 @@
 server.port=8080
-poseidon.auto=false
+
 
 spring.flyway.locations=classpath:sql
 spring.flyway.enabled=false
@@ -46,4 +46,4 @@ log.dir=logs
 spring.redis.host=127.0.0.1
 spring.redis.port=6379
 logging.level.${projectPackage}.${suffix}.mapper=debug
-
+logstash.host=127.0.0.1:9000

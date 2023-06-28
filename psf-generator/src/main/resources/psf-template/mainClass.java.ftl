@@ -5,8 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import com.muggle.psf.genera.ui.controller.CodeController;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
 /**
@@ -24,10 +22,5 @@ public static void main(String[] args) {
 SpringApplication.run(${otherField.className}.class, args);
 }
 
-@Profile("local")
-@Bean
-public CodeController codeController() {
-return new CodeController();
-}
 
 }

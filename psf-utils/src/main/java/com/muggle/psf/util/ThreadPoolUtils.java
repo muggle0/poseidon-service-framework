@@ -1,4 +1,4 @@
-package com.muggle.psf.genera.ui.psf.util;
+package com.muggle.psf.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

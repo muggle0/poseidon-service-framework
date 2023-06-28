@@ -6,16 +6,17 @@
     <jmxConfigurator/>
 
     <!--日志文件 最大保存天数-->
-    <property name="maxHistory" value="180" />
+    <property name="maxHistory" value="180"/>
     <!--日志文件路径-->
     <springProperty scope="context" name="log_dir" source="log.dir"/>
-
+    <springProperty scope="context" name="spring.application.name" source="spring.application.name"/>
     <!--控制台日志配置-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>
                 <pattern>
-                    %white(POSEIDON----) %red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %cyan(%logger) - %msg%n
+                    %white(${spring.application.name}) %red(%d{yyyy-MM-dd
+                    HH:mm:ss})%green([%thread])%highlight(%-5level) %cyan(%logger) - %msg%n
                 </pattern>
             </pattern>
         </encoder>
@@ -82,12 +83,17 @@
         <appender-ref ref="info"/>
     </appender>
 
+    <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${logstash.host}</destination>
+        <includeCallerData>true</includeCallerData>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeCallerData>true</includeCallerData>
+        </encoder>
+    </appender>
+
+
     <root>
-        <level value="info"/>
-        <appender-ref ref="console"/>
-        <appender-ref ref="logs-asyn"/>
-        <appender-ref ref="debug"/>
-        <appender-ref ref="error"/>
+        @logbackConf@
     </root>
 
 </configuration>

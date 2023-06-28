@@ -15,7 +15,6 @@ initParams = {
 @WebInitParam(name = "loginPassword",value = "123456"),
 @WebInitParam(name = "resetEnable",value = "false")//禁止html页面上reset All功能
 })
-@ConditionalOnProperty(prefix = "poseidon.mybatis",name = "support",havingValue = "normal" )
 public class DrulidStatViewServlet extends StatViewServlet {
-    private static final long serialVersionUID = 1L;
+private static final long serialVersionUID = 1L;
 }
