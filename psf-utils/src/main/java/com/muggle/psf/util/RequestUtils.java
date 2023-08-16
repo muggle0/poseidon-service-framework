@@ -13,10 +13,11 @@ public class RequestUtils {
 
     /**
      * 获取真实的IP地址
+     *
      * @param request 请求
      * @return
      */
-    public static String getIP(HttpServletRequest request) {
+    public static String getIP(final HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");

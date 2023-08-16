@@ -17,3 +17,4 @@ gen
 **/target
 **/test
 **/.mvn
+*/pom.xml.versionsBackup

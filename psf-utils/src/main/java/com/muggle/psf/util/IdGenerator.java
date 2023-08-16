@@ -45,22 +45,24 @@ public abstract class IdGenerator {
 
     /**
      * 获取一个流水单号
+     *
      * @return
      */
-    public abstract String getNextSerialNumber(String perfix,String mark,int size);
+    public abstract String getNextSerialNumber(String perfix, String mark, int size);
 
 
     /**
      * 获取多个流水号
+     *
      * @param perfix
      * @param mark
      * @param length
      * @return
      */
-    public abstract List<String> getBatchSerialNumber(String perfix, String mark, int length,int size);
+    public abstract List<String> getBatchSerialNumber(String perfix, String mark, int length, int size);
 
     //
-    public IdGenerator(long datacenterId, long machineId) {
+    public IdGenerator(final long datacenterId, final long machineId) {
         if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {
             throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
         }
@@ -77,7 +79,7 @@ public abstract class IdGenerator {
      * @return
      */
     public synchronized long simpleNextId() {
-        long currStmp = getNewstmp();
+        long currStmp = this.getNewstmp();
         if (currStmp < lastStmp) {
             throw new RuntimeException("Clock moved backwards.  Refusing to generate id");
         }
@@ -87,7 +89,7 @@ public abstract class IdGenerator {
             sequence = (sequence + 1) & MAX_SEQUENCE;
             //同一毫秒的序列数已经达到最大
             if (sequence == 0L) {
-                currStmp = getNextMill();
+                currStmp = this.getNextMill();
             }
         } else {
             //不同毫秒内，序列号置为0
@@ -97,15 +99,15 @@ public abstract class IdGenerator {
         lastStmp = currStmp;
 
         return (currStmp - START_STMP) << TIMESTMP_LEFT //时间戳部分
-                | datacenterId << DATACENTER_LEFT       //数据中心部分
-                | machineId << MACHINE_LEFT             //机器标识部分
-                | sequence;                             //序列号部分
+            | datacenterId << DATACENTER_LEFT       //数据中心部分
+            | machineId << MACHINE_LEFT             //机器标识部分
+            | sequence;                             //序列号部分
     }
 
     private long getNextMill() {
-        long mill = getNewstmp();
+        long mill = this.getNewstmp();
         while (mill <= lastStmp) {
-            mill = getNewstmp();
+            mill = this.getNewstmp();
         }
         return mill;
     }

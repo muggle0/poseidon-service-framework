@@ -1,14 +1,14 @@
 package com.muggle.psf.util;
 
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 /**
  * @Description:
@@ -34,43 +34,45 @@ public class JSONUtils {
      * @param object
      * @return
      */
-    public static String toJacksonString(Object object) {
+    public static String toJacksonString(final Object object) {
         if (object == null) {
             return null;
         }
         try {
             return MAPPER.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             logger.warn("Parse object to json error: ", e);
         }
         return "";
     }
 
-    public static <T> T paserJacsonObject(String src, Class<T> clazz) {
+    public static <T> T paserJacsonObject(final String src, final Class<T> clazz) {
         if (StringUtils.isEmpty(src) || clazz == null) {
             return null;
         }
         try {
             return String.class.equals(clazz) ? (T) src : MAPPER.readValue(src, clazz);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             logger.warn("Parse json to object error: ", e);
         }
         return null;
     }
-    public static <T> T paserJacsonObject(String src, Class<T> clazz, SimpleDateFormat dateFormat) {
+
+    public static <T> T paserJacsonObject(final String src, final Class<T> clazz, final SimpleDateFormat dateFormat) {
         if (StringUtils.isEmpty(src) || clazz == null) {
             return null;
         }
         try {
-            ObjectMapper objectMapper = buildJacson(dateFormat);
+            final ObjectMapper objectMapper = buildJacson(dateFormat);
             return String.class.equals(clazz) ? (T) src : objectMapper.readValue(src, clazz);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             logger.warn("Parse json to object error: ", e);
         }
         return null;
     }
-    private static ObjectMapper buildJacson(SimpleDateFormat dateFormat){
-        ObjectMapper objectMapper = new ObjectMapper();
+
+    private static ObjectMapper buildJacson(final SimpleDateFormat dateFormat) {
+        final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setTimeZone(TimeZone.getDefault());
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setDateFormat(dateFormat);

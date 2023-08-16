@@ -55,10 +55,6 @@
     <!-- 检查类和接口的javadoc。默认不检查author和version tags -->
     <module name="JavadocType"/>
 
-    <!-- 检查javadoc的格式 -->
-	<module name="JavadocStyle">
-      <property name="checkFirstSentence" value="false"/>
-    </module>
     <!-- 检查TODO:注释 -->
     <module name="TodoComment"/>
     <!-- 命名检查 -->
