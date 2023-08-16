@@ -4,7 +4,7 @@ idea 需下载插件 snarlint 、checkstyle 、save actions 三个插件辅助�
 
 ## 1.1 分支管理规范
 
-代码分支管理遵从git flow 规范
+代码分支管理遵从gitlab flow 规范
 
 master 分支保证是最新最稳定的代码，develop 用于开发环境部署。
 
@@ -96,7 +96,9 @@ settings-al.xml 请联系本人获取
 
 ## 3.2 psf-api-gateway
 
+网关采用 spring cloud gateway
 
+![网关](1692175372262.jpg)
 ## 3.3 psf-auth-center
 
 ## 3.4 psf-cloud-starter
