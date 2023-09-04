@@ -6,7 +6,6 @@
         <groupId>com.muggle</groupId>
         <artifactId>psf-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.muggle</groupId>
     <artifactId>psf-api-gateway-control</artifactId>
