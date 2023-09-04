@@ -1,8 +1,8 @@
 package com.muggle.psf.handler.query;
 
 
-import com.muggle.psf.base.BaseQuery;
-import com.muggle.psf.result.ResultBean;
+import com.muggle.psf.common.base.BaseQuery;
+import com.muggle.psf.common.result.ResultBean;
 
 /**
  * @Description:

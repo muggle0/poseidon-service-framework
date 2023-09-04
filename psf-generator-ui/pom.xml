@@ -12,7 +12,7 @@
     <groupId>com.muggle</groupId>
     <artifactId>psf-generator-ui</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>psf generator</name>
+    <name>psf generator ui</name>
     <description>psf 代码模板-ui</description>
     <packaging>jar</packaging>
 

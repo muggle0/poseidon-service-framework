@@ -1,9 +1,9 @@
 package com.muggle.psf.aop;
 
 import com.github.pagehelper.Page;
-import com.muggle.psf.base.BaseQuery;
+import com.muggle.psf.common.base.BaseQuery;
+import com.muggle.psf.common.result.ResultBean;
 import com.muggle.psf.handler.query.QuerySqlProcessor;
-import com.muggle.psf.result.ResultBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
@@ -30,7 +30,7 @@ public class QueryAspect {
         log.debug(">>>>>>>>>>>>>>>>>>>>>>> 查询切面注册 <<<<<<<<<<<<<<<<<<<<<");
     }
 
-    @Pointcut("execution(* *..*.*Controller.*(com.muggle.psf.base.BaseQuery+))")
+    @Pointcut("execution(* *..*.*Controller.*(com.muggle.psf.common.base.BaseQuery+))")
     public void query() {
     }
 

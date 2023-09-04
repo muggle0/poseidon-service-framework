@@ -1,6 +1,7 @@
 package com.muggle.psf.base;
 
-import com.muggle.psf.exception.SimplePoseidonException;
+import com.muggle.psf.common.base.BaseQuery;
+import com.muggle.psf.common.exception.SimplePoseidonException;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
