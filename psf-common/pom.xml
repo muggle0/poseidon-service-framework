@@ -13,7 +13,7 @@
     <artifactId>psf-common</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <properties>
-        <psf.utils>1.0-SNAPSHOT</psf.utils>
+        <psf.utils>1.0.0-SNAPSHOT</psf.utils>
     </properties>
     <dependencies>
         <dependency>

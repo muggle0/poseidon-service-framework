@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.muggle</groupId>
     <artifactId>psf-utils</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>psf util</name>
     <description>poseidon service framework util</description>
     <dependencies>
