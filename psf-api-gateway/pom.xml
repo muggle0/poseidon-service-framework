@@ -143,22 +143,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <configuration>
-                    <imageName>muggle0-docker.pkg.coding.net/poseidon/docker/${project.artifactId}:${project.version}</imageName>
-                    <dockerDirectory>${basedir}</dockerDirectory>
-                    <!-- 这里是复制 jar 包到 docker 容器指定目录配置 -->
-                    <resources>
-                        <resource>
-                            <targetPath>/app/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>app.jar</include>
-                        </resource>
-                    </resources>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>

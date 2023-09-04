@@ -221,18 +221,19 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <distributionManagement>
+        <repository>
+            <id>muggle0-poseidon-real</id>
+            <name>real</name>
+            <url>https://muggle0-maven.pkg.coding.net/repository/poseidon/real/</url>
+        </repository>
+    </distributionManagement>
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                </plugin>
-                <plugin>
-                    <groupId>com.spotify</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>1.0.0</version>
-
                 </plugin>
             </plugins>
         </pluginManagement>
