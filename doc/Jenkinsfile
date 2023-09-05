@@ -1,10 +1,10 @@
 pipeline {
   agent any
   stages {
-    stage('检出') {
+    stage('checkout') {
       steps {
         checkout([$class: 'GitSCM',
-        branches: [[name: GIT_BUILD_REF]],
+        branches: [[name: master]],
         userRemoteConfigs: [[
           url: GIT_REPO_URL,
           credentialsId: CREDENTIALS_ID
@@ -12,18 +12,10 @@ pipeline {
       }
     }
 
-    stage('编译') {
+    stage('compile and build') {
       steps {
         sh 'mvn clean package deploy -f psf-api-gateway'
       }
     }
-
-    stage('编译加构建镜像') {
-      steps {
-        sh "docker build -t ${CODING_DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ${DOCKERFILE_PATH} ${DOCKER_BUILD_CONTEXT}"
-        useCustomStepPlugin(key: 'SYSTEM:artifact_docker_push', version: 'latest', params: [image:"${CODING_DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}",repo:"${DOCKER_REPO_NAME}"])
-      }
-    }
-
   }
-  }
+}
