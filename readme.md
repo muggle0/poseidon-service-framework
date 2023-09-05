@@ -98,7 +98,7 @@ settings-al.xml 请联系本人获取
 
 网关采用 spring cloud gateway
 
-![网关](1692175372262.jpg)
+![网关](doc/1692175372262.jpg)
 ## 3.3 psf-auth-center
 
 ## 3.4 psf-cloud-starter
