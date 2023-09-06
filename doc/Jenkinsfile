@@ -3,15 +3,9 @@ pipeline {
   stages {
     stage('checkout') {
       steps {
-        checkout([$class: 'GitSCM',
-        branches: [[name: master]],
-        userRemoteConfigs: [[
-          url: GIT_REPO_URL,
-          credentialsId: CREDENTIALS_ID
-        ]]])
+        checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'git@github.com:muggle0/poseidon-service-framework.git']])
       }
     }
-
     stage('compile and build') {
       steps {
         sh 'mvn clean package deploy -f psf-api-gateway'
