@@ -9,7 +9,7 @@ pipeline {
     stage('compile and build') {
       steps {
         withMaven(maven: 'Maven_Installation_Name') {
-            bat 'mvn clean package deploy -f ./psf-api-gateway'
+            sh 'mvn clean package deploy -f ./psf-api-gateway'
         }
       }
     }
