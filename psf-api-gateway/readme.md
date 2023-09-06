@@ -32,3 +32,8 @@ https://blog.csdn.net/weixin_40461281/article/details/123054256
 ```json
 {"id":"path_route_change","uri":"http://127.0.0.1:8082","order":0,"predicate":{},"filters":[{"order":-2}]}
 ```
+
+## jenkins 配置
+```
+# Jenkins Maven Integration Plugin
+```
