@@ -9,7 +9,7 @@ pipeline {
     stage('compile and build') {
       steps {
         maven(maven : 'Maven_3.5.2'){
-        bat "mvn clean compile"
+        sh "mvn clean compile"
       }
     }
   }
