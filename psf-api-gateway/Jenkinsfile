@@ -10,11 +10,11 @@ pipeline {
         steps {
             script {
                 if (isUnix()) {
-                 withMaven(maven: 'maven', mavenSettingsConfig: '705da47a-85bf-4335-828c-f341e2a60a94') {
+                 withMaven(jdk:'jdk8',maven: 'maven', mavenSettingsConfig: '705da47a-85bf-4335-828c-f341e2a60a94') {
                     sh 'mvn clean package deploy -f ./psf-api-gateway'
                  }
                 } else {
-                  withMaven(maven: 'maven', mavenSettingsConfig: '705da47a-85bf-4335-828c-f341e2a60a94') {
+                  withMaven(jdk:'jdk8',maven: 'maven', mavenSettingsConfig: '705da47a-85bf-4335-828c-f341e2a60a94') {
                     bat 'mvn clean package deploy -f ./psf-api-gateway'
                  }
                 }
