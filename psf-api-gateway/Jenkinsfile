@@ -7,10 +7,19 @@ pipeline {
       }
     }
     stage('compile and build') {
-      steps {
-        maven(maven : 'Maven_3.5.2'){
-        sh "mvn clean compile"
-      }
+        steps {
+            script {
+                if (isUnix()) {
+                 withMaven(maven: 'maven') {
+                    sh 'mvn clean package deploy -f ./psf-api-gateway'
+                 }
+                } else {
+                 withMaven(maven: 'maven') {
+                    bat 'mvn clean package deploy -f ./psf-api-gateway'
+                 }
+                }
+            }
+        }
     }
   }
 }
