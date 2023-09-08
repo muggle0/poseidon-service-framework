@@ -7,8 +7,8 @@
     <servers>
         <server>
             <id>muggle0-poseidon-real</id>
-            <username>${CODING_MAVEN_REG_USERNAME}</username>
-            <password>${CODING_MAVEN_REG_PASSWORD}</password>
+            <username>${env.CODING_MAVEN_REG_USERNAME}</username>
+            <password>${env.CODING_MAVEN_REG_PASSWORD}</password>
         </server>
     </servers>
     <profiles>
@@ -25,17 +25,17 @@
                         <enabled>false</enabled>
                     </snapshots>
                 </repository>
-              <repository>
-                  <id>muggle0-poseidon-real</id>
-                  <name>real</name>
-                  <url>https://muggle0-maven.pkg.coding.net/repository/poseidon/real/</url>
-                  <releases>
-                      <enabled>true</enabled>
-                  </releases>
-                  <snapshots>
-                      <enabled>true</enabled>
-                  </snapshots>
-              </repository>
+                <repository>
+                    <id>muggle0-poseidon-real</id>
+                    <name>real</name>
+                    <url>https://muggle0-maven.pkg.coding.net/repository/poseidon/real/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
@@ -59,15 +59,15 @@
             <id>aliyunmaven</id>
             <mirrorOf>central</mirrorOf>
             <name>aliyun maven</name>
-            <url>https://maven.aliyun.com/repository/public </url>
+            <url>https://maven.aliyun.com/repository/public</url>
         </mirror>
-		  <mirror>
-        <id>nexus-tencentyun</id>
-        <!-- 此配置避免了本仓库制品的拉取流量被切换到腾讯云镜像源，保证您在使用镜像加速的同时可以从本仓库拉取制品 -->
-        <mirrorOf>!muggle0-poseidon-real</mirrorOf>
-        <name>Nexus tencentyun</name>
-        <url>http://mirrors.cloud.tencent.com/nexus/repository/maven-public/</url>
-    </mirror>
+        <mirror>
+            <id>nexus-tencentyun</id>
+            <!-- 此配置避免了本仓库制品的拉取流量被切换到腾讯云镜像源，保证您在使用镜像加速的同时可以从本仓库拉取制品 -->
+            <mirrorOf>!muggle0-poseidon-real</mirrorOf>
+            <name>Nexus tencentyun</name>
+            <url>http://mirrors.cloud.tencent.com/nexus/repository/maven-public/</url>
+        </mirror>
     </mirrors>
 
 </settings>

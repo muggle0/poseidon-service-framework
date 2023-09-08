@@ -1,1 +1,0 @@
-cd .. && mvn package org.springframework.boot:spring-boot-maven-plugin:2.1.8.RELEASE:build-info dockerfile:build --settings D:\workspace\java\github\poseidon\doc\settings-al.xml
