@@ -1,0 +1,25 @@
+pipeline {
+  agent any
+  stages {
+    stage('checkout') {
+      steps {
+        checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'git@e.coding.net:muggle0/poseidon/poseidon-service-framework.git']])
+      }
+    }
+    stage('compile and build') {
+        steps {
+            script {
+                if (isUnix()) {
+                 withMaven(jdk:'jdk8',maven: 'maven') {
+                    sh 'mvn clean package deploy -f ./psf-parent -s ./doc/settings.xml'
+                 }
+                } else {
+                  withMaven(jdk:'jdk8',maven: 'maven') {
+                    bat 'mvn clean package deploy -f ./psf-parent -s ./doc/settings.xml'
+                 }
+                }
+            }
+        }
+    }
+  }
+}
