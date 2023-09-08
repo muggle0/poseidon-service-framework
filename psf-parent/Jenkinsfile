@@ -1,28 +1,17 @@
 pipeline {
   agent any
+  parameters {
+        def tags = sh(returnStdout: true, script: 'git ls-remote --tags <repository_url> | cut -d / -f 3-').trim().split('\n')
+        gitParameter branchFilter: 'origin/(.*)', defaultValue: tags[0], name: 'TAG', type: 'PT_TAG',selectedValue: 'TOP'
+        gitParameter branchFilter: 'origin/(.*)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH'
+  }
   stages {
-
     stage('checkout') {
         steps {
             checkout([$class: 'GitSCM',
                       branches: [[name: 'master']],
                       userRemoteConfigs: [[url: 'git@e.coding.net:muggle0/poseidon/poseidon-service-framework.git']]])
         }
-    }
-
-    stage('init') {
-     steps {
-        script {
-            if (isUnix()) {
-                def tags = sh(returnStdout: true, script: 'git describe  --tags').trim()
-                env.TAG=tags
-            }else{
-                 def latestTag = bat(script: 'git describe --abbrev=0 --tags', returnStdout: true).trim()[1]
-                 echo "Latest Git Tag: ${latestTag}"
-                 env.TAG=latestTag
-            }
-        }
-     }
     }
     stage('compile') {
       steps {
@@ -43,9 +32,9 @@ pipeline {
         steps {
             script {
                 if (isUnix()) {
-                    sh "mvn versions:set -DnewVersion=${env.TAG} -f ./psf-parent"
+                    sh "mvn versions:set -DnewVersion=${params.TAG} -f ./psf-parent"
                 }else{
-                     bat "mvn versions:set -DnewVersion=${env.TAG} -f ./psf-parent"
+                     bat "mvn versions:set -DnewVersion=${params.TAG} -f ./psf-parent"
                 }
             }
         }
