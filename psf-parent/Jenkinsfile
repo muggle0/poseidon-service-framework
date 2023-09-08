@@ -1,27 +1,28 @@
 pipeline {
   agent any
   stages {
-    stage('init') {
-         steps {
-            script {
-                if (isUnix()) {
-                    def tags = sh(returnStdout: true, script: 'git describe  --tags').trim()
-                    env.TAG=tags
-                }else{
-                     def latestTag = bat(script: 'git describe --abbrev=0 --tags', returnStdout: true).trim()[1]
-                     echo "Latest Git Tag: ${latestTag}"
-                     env.TAG=latestTag
-                }
-            }
 
-         }
-    }
     stage('checkout') {
         steps {
             checkout([$class: 'GitSCM',
                       branches: [[name: 'master']],
                       userRemoteConfigs: [[url: 'git@e.coding.net:muggle0/poseidon/poseidon-service-framework.git']]])
         }
+    }
+
+    stage('init') {
+     steps {
+        script {
+            if (isUnix()) {
+                def tags = sh(returnStdout: true, script: 'git describe  --tags').trim()
+                env.TAG=tags
+            }else{
+                 def latestTag = bat(script: 'git describe --abbrev=0 --tags', returnStdout: true).trim()[1]
+                 echo "Latest Git Tag: ${latestTag}"
+                 env.TAG=latestTag
+            }
+        }
+     }
     }
     stage('compile') {
       steps {
