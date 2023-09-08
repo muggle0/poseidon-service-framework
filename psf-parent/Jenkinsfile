@@ -6,18 +6,40 @@ pipeline {
         checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'git@e.coding.net:muggle0/poseidon/poseidon-service-framework.git']])
       }
     }
-    stage('compile and build') {
+    stage('compile') {
+      steps {
+         script {
+            if (isUnix()) {
+             withMaven(jdk:'jdk8',maven: 'maven') {
+                sh 'mvn clean install -f ./psf-parent -s ./doc/settings.xml'
+             }
+            } else {
+              withMaven(jdk:'jdk8',maven: 'maven') {
+                bat 'mvn clean install -f ./psf-parent -s ./doc/settings.xml'
+             }
+            }
+         }
+      }
+    }
+    stage('deploy') {
+        steps {
+            env.TAG = sh(returnStdout: true ,script: "git tag --sort=taggerdate| tail -1").trim()
+        }
+
+        steps {
+            sh "mvn versions:set -DnewVersion=${TAG} -f ./psf-parent"
+        }
         steps {
             script {
-                if (isUnix()) {
-                 withMaven(jdk:'jdk8',maven: 'maven') {
-                    sh 'mvn clean package deploy -f ./psf-parent -s ./doc/settings.xml'
-                 }
-                } else {
-                  withMaven(jdk:'jdk8',maven: 'maven') {
-                    bat 'mvn clean package deploy -f ./psf-parent -s ./doc/settings.xml'
-                 }
+               if (isUnix()) {
+                withMaven(jdk:'jdk8',maven: 'maven') {
+                   sh 'mvn deploy -f ./psf-parent -s ./doc/settings.xml'
                 }
+               } else {
+                 withMaven(jdk:'jdk8',maven: 'maven') {
+                   bat 'mvn deploy -f ./psf-parent -s ./doc/settings.xml'
+                }
+               }
             }
         }
     }
