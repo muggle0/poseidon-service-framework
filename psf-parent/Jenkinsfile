@@ -1,10 +1,21 @@
 pipeline {
   agent any
-  parameters {
-      gitParameter branchFilter: 'origin/(.*)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH'
-      gitParameter branchFilter: 'origin/(.*)', defaultValue: '0.0.1-SNAPSHOT', name: 'TAG', type: 'PT_TAG',selectedValue: 'TOP'
-  }
   stages {
+    stage('init') {
+         steps {
+            script {
+                if (isUnix()) {
+                    def tags = sh(returnStdout: true, script: 'git describe  --tags').trim()
+                    env.TAG=tags
+                }else{
+                     def latestTag = bat(script: 'git describe --abbrev=0 --tags', returnStdout: true).trim()[1]
+                     echo "Latest Git Tag: ${latestTag}"
+                     env.TAG=latestTag
+                }
+            }
+
+         }
+    }
     stage('checkout') {
         steps {
             checkout([$class: 'GitSCM',
@@ -31,9 +42,9 @@ pipeline {
         steps {
             script {
                 if (isUnix()) {
-                    sh "mvn versions:set -DnewVersion=${params.TAG} -f ./psf-parent"
+                    sh "mvn versions:set -DnewVersion=${env.TAG} -f ./psf-parent"
                 }else{
-                     bat "mvn versions:set -DnewVersion=${params.TAG} -f ./psf-parent"
+                     bat "mvn versions:set -DnewVersion=${env.TAG} -f ./psf-parent"
                 }
             }
         }
