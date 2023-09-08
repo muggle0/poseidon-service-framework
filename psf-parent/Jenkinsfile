@@ -23,9 +23,10 @@ pipeline {
     }
     stage('deploy') {
         steps {
-            env.TAG = sh(returnStdout: true ,script: "git tag --sort=taggerdate| tail -1").trim()
+            script {
+                env.TAG = sh(returnStdout: true ,script: "git tag --sort=taggerdate| tail -1").trim()
+            }
         }
-
         steps {
             sh "mvn versions:set -DnewVersion=${TAG} -f ./psf-parent"
         }
