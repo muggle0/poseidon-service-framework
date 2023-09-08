@@ -8,16 +8,14 @@ pipeline {
     }
     stage('编译') {
       steps {
-        sh 'mvn clean install -f ./psf-parent -s ./doc/settings.xml'
+        sh 'mvn clean install docker:build -f ./psf-parent -s ./doc/settings.xml'
       }
     }
 
-    stage('修改版本号') {
-    steps {
-             env.TAG = sh(returnStdout: true ,script: "git tag --sort=taggerdate| tail -1").trim()
-          }
+    stage('push') {
       steps {
-         sh "mvn versions:set -DnewVersion=${TAG} -f ./psf-parent"
+         bat 'docker login -u p_znyuan@tencent.com -p Git1977339740! muggle0-docker.pkg.coding.net'
+         bat 'docker push'
       }
     }
   }
