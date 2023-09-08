@@ -2,7 +2,7 @@ pipeline {
   agent any
   parameters {
       gitParameter branchFilter: 'origin/(.*)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH'
-      gitParameter branchFilter: 'origin/(.*)', defaultValue: '0.0.1-SNAPSHOT', name: 'TAG', type: 'PT_TAG'
+      gitParameter branchFilter: 'origin/(.*)', defaultValue: '0.0.1-SNAPSHOT', name: 'TAG', type: 'PT_TAG',selectedValue: 'TOP'
   }
   stages {
     stage('checkout') {
