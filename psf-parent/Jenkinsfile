@@ -1,10 +1,16 @@
 pipeline {
   agent any
+  parameters {
+      gitParameter branchFilter: 'origin/(.*)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH'
+      gitParameter branchFilter: 'origin/(.*)', defaultValue: '0.0.1-SNAPSHOT', name: 'TAG', type: 'PT_TAG'
+  }
   stages {
     stage('checkout') {
-      steps {
-        checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'git@e.coding.net:muggle0/poseidon/poseidon-service-framework.git']])
-      }
+        steps {
+            checkout([$class: 'GitSCM',
+                      branches: [[name: 'master']],
+                      userRemoteConfigs: [[url: 'git@e.coding.net:muggle0/poseidon/poseidon-service-framework.git']]])
+        }
     }
     stage('compile') {
       steps {
@@ -21,15 +27,18 @@ pipeline {
          }
       }
     }
-    stage('deploy') {
+    stage('tag version') {
         steps {
             script {
-                env.TAG = sh(returnStdout: true ,script: "git tag --sort=taggerdate| tail -1").trim()
+                if (isUnix()) {
+                    sh "mvn versions:set -DnewVersion=${params.TAG} -f ./psf-parent"
+                }else{
+                     bat "mvn versions:set -DnewVersion=${params.TAG} -f ./psf-parent"
+                }
             }
         }
-        steps {
-            sh "mvn versions:set -DnewVersion=${TAG} -f ./psf-parent"
-        }
+    }
+    stage('deploy') {
         steps {
             script {
                if (isUnix()) {
