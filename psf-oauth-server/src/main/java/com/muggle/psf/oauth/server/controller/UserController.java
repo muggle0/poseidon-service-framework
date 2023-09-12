@@ -1,4 +1,4 @@
-package com.muggle.psf.genera.ui.psf.controller;
+package com.muggle.psf.oauth.server.controller;
 
 
 import org.springframework.web.bind.annotation.GetMapping;
