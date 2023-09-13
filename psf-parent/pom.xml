@@ -13,21 +13,21 @@
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.4</spring-cloud.version>
         <alibaba.cloud.version>2022.0.0.0-RC2</alibaba.cloud.version>
-        <lombok.version>1.16.20</lombok.version>
+        <lombok.version>1.18.28</lombok.version>
         <!--springboot starter-->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <resource.delimiter>@</resource.delimiter>
         <maven.compiler.source>${java.version}</maven.compiler.source>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <swagger.version>2.9.2</swagger.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <swagger.version>3.0.0</swagger.version>
         <druild.version>1.1.9</druild.version>
         <mybatis.version>1.3.2</mybatis.version>
         <mybatisplus.version>3.4.0</mybatisplus.version>
         <mysql.version>8.0.13</mysql.version>
         <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
         <pagehelp.version>5.1.7</pagehelp.version>
-        <fastjson.version>1.2.56</fastjson.version>
+        <fastjson.version>2.0.40</fastjson.version>
         <mapstruct.versoin>1.3.1.Final</mapstruct.versoin>
         <tx.version>5.0.2.RELEASE</tx.version>
 
@@ -38,6 +38,12 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.1.3</version>
     </parent>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+    </dependencies>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -75,19 +81,20 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.3</version>
+                <version>1.4.11</version>
             </dependency>
 
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
-                <version>1.2.3</version>
+                <version>1.4.11</version>
             </dependency>
+
 
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper</artifactId>
-                <version>5.1.7</version>
+                <version>5.3.3</version>
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
