@@ -112,9 +112,8 @@
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
+
     </dependencies>
-    <dependencyManagement>
-    </dependencyManagement>
     <distributionManagement>
         <repository>
             <id>muggle0-poseidon-real</id>

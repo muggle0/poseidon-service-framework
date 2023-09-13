@@ -12,14 +12,11 @@
     <groupId>com.muggle</groupId>
     <artifactId>psf-common</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <properties>
-        <psf.utils>1.0.0-SNAPSHOT</psf.utils>
-    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.muggle</groupId>
             <artifactId>psf-utils</artifactId>
-            <version>${psf.utils}</version>
         </dependency>
         <dependency>
             <groupId>com.github.pagehelper</groupId>
@@ -36,6 +33,10 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
         </dependency>
     </dependencies>
 
