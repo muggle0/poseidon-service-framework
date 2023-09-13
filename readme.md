@@ -186,3 +186,5 @@ psf 做的事情就是，将所有非业务的功能组件化，成为一些独�
 1. oauth
 2. springboot init
 
+## 资料
+1. [oauth server](https://blog.csdn.net/ACE_U_005A/article/details/128851814)  
