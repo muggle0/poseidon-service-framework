@@ -11,8 +11,8 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.NettyWriteResponseFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.cloud.gateway.support.BodyInserterContext;
-import org.springframework.cloud.gateway.support.CachedBodyOutputMessage;
-import org.springframework.cloud.gateway.support.DefaultServerRequest;
+import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
+import org.springframework.web.reactive.function.server.DefaultServerRequest;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
@@ -84,7 +84,12 @@ public class PsfSecretReqGatewayFilterFactory extends AbstractGatewayFilterFacto
 
 
         private Mono<Void> decodeReque(final ServerWebExchange exchange, final GatewayFilterChain chain) {
-            final ServerRequest serverRequest = new DefaultServerRequest(exchange);
+            String body =exchange.getRequest().getBody().toString();
+            exchange.mutate().request()
+            ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
+                    .body(modifiedRequestBody.getBytes())
+                    .build();
+//            final ServerRequest serverRequest = new DefaultServerRequest(exchange);
             // mediaType
             final MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
             final HttpMethod method = exchange.getRequest().getMethod();

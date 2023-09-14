@@ -6,14 +6,17 @@ import com.muggle.psf.common.exception.GatewayException;
 import com.muggle.psf.common.result.CommonErrorCode;
 import com.muggle.psf.common.result.ResultBean;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
@@ -32,16 +35,16 @@ public class PsfErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler
 
     private final MessageSource messageSource;
 
-    public PsfErrorWebExceptionHandler(final ErrorAttributes errorAttributes, final ResourceProperties resourceProperties, final ErrorProperties errorProperties, final ApplicationContext applicationContext, final MessageSource messageSource) {
-        super(errorAttributes, resourceProperties, errorProperties, applicationContext);
+    public PsfErrorWebExceptionHandler(final ErrorAttributes errorAttributes, WebProperties.Resources resources,
+                                       final ErrorProperties errorProperties, final ApplicationContext applicationContext, final MessageSource messageSource) {
+        super(errorAttributes, resources, errorProperties, applicationContext);
         this.messageSource = messageSource;
     }
 
-    /**
-     * 获取异常属性
-     */
+
+
     @Override
-    protected Map<String, Object> getErrorAttributes(final ServerRequest request, final boolean includeStackTrace) {
+    protected Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
         int code = 500;
         final Throwable error = super.getError(request);
         if (error instanceof org.springframework.cloud.gateway.support.NotFoundException) {
@@ -57,17 +60,17 @@ public class PsfErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler
      */
     @Override
     protected RouterFunction<ServerResponse> getRoutingFunction(final ErrorAttributes errorAttributes) {
-        return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
+        return RouterFunctions.route(RequestPredicates.accept(MediaType.APPLICATION_JSON),
+                this::renderErrorResponse);
     }
 
-
     @Override
-    protected HttpStatus getHttpStatus(final Map<String, Object> errorAttributes) {
+    protected int getHttpStatus(final Map<String, Object> errorAttributes) {
         final int statusCode = (int) errorAttributes.get("code");
         if (statusCode == 404 || statusCode == 502) {
-            return HttpStatus.valueOf(statusCode);
+            return statusCode;
         }
-        return HttpStatus.valueOf(500);
+        return 500;
     }
 
     /**

@@ -1,8 +1,9 @@
 package com.muggle.psf.gateway.config;
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
+import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
@@ -24,13 +25,13 @@ import java.util.List;
  * Created by muggle
  */
 @Configuration
-@EnableConfigurationProperties({ServerProperties.class, ResourceProperties.class})
+@EnableConfigurationProperties({ServerProperties.class, MessageSourceProperties.class})
 public class ErrorHandlerConfig {
     private final ServerProperties serverProperties;
 
     private final ApplicationContext applicationContext;
 
-    private final ResourceProperties resourceProperties;
+    private final WebProperties.Resources resourceProperties;
 
     private final List<ViewResolver> viewResolvers;
 
@@ -39,14 +40,14 @@ public class ErrorHandlerConfig {
     private final MessageSource messageSource;
 
     public ErrorHandlerConfig(final ServerProperties serverProperties,
-                              final ResourceProperties resourceProperties,
+                              final WebProperties webProperties,
                               final ObjectProvider<List<ViewResolver>> viewResolversProvider,
                               final ServerCodecConfigurer serverCodecConfigurer,
                               final ApplicationContext applicationContext,
                               final MessageSource messageSource) {
         this.serverProperties = serverProperties;
         this.applicationContext = applicationContext;
-        this.resourceProperties = resourceProperties;
+        this.resourceProperties = webProperties.getResources();
         this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
         this.serverCodecConfigurer = serverCodecConfigurer;
         this.messageSource = messageSource;

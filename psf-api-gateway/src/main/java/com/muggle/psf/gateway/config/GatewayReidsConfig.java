@@ -2,6 +2,7 @@ package com.muggle.psf.gateway.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alicp.jetcache.anno.CacheInvalidate;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 
-import javax.annotation.Resource;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -84,8 +85,7 @@ public class GatewayReidsConfig implements GatewayConfig, SchedulingConfigurer {
         };
         final Trigger trigger = triggerContext -> {
             final CronTrigger cronTrigger = new CronTrigger(gatewayCron);
-            final Date nextExecTime = cronTrigger.nextExecutionTime(triggerContext);
-            return nextExecTime;
+            return cronTrigger.nextExecution(triggerContext);
         };
         scheduledTaskRegistrar.addTriggerTask(task, trigger);
     }

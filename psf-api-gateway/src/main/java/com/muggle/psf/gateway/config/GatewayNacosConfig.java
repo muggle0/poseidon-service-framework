@@ -5,6 +5,7 @@ import com.alibaba.nacos.api.config.listener.Listener;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.muggle.psf.gateway.properties.PsfGatewayProperties;
 import com.muggle.psf.gateway.repository.NacosRouteDefinitionRepository;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
@@ -13,7 +14,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.concurrent.Executor;
 
 /**

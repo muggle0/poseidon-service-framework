@@ -37,3 +37,7 @@ https://blog.csdn.net/weixin_40461281/article/details/123054256
 ```
 # Jenkins Maven Integration Plugin
 ```
+
+## 资料
+
+https://blog.csdn.net/fly910905/article/details/121682625
