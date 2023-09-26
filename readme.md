@@ -188,3 +188,15 @@ psf 做的事情就是，将所有非业务的功能组件化，成为一些独�
 
 ## 资料
 1. [oauth server](https://blog.csdn.net/ACE_U_005A/article/details/128851814)  
+
+## 版本升级计划
+
+```
+-XX:MaxRAMPercentage=85.0 \
+-XX:InitialRAMPercentage=85.0 \
+-XX:MinRAMPercentage=85.0 \
+
+GraalVM
+
+https://mybatis-flex.com/zh/intro/comparison.html
+```
