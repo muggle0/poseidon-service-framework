@@ -5,37 +5,32 @@ import com.muggle.psf.common.exception.GatewayException;
 import com.muggle.psf.gateway.properties.PsfHeadkeyProperties;
 import com.muggle.psf.gateway.service.SecretService;
 import lombok.extern.slf4j.Slf4j;
-import org.reactivestreams.Publisher;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.NettyWriteResponseFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.cloud.gateway.filter.factory.rewrite.ModifyRequestBodyGatewayFilterFactory;
-import org.springframework.cloud.gateway.filter.factory.rewrite.RewriteFunction;
-import org.springframework.cloud.gateway.support.BodyInserterContext;
 import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
-import org.springframework.cloud.gateway.support.GatewayToStringStyler;
-import org.springframework.http.codec.HttpMessageReader;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.reactive.function.server.DefaultServerRequest;
+import org.springframework.cloud.gateway.support.BodyInserterContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.DecoderHttpMessageReader;
+import org.springframework.http.codec.HttpMessageReader;
+import org.springframework.http.codec.json.Jackson2JsonDecoder;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.HandlerStrategies;
-import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
@@ -51,12 +46,12 @@ public class PsfSecretReqGatewayFilterFactory extends AbstractGatewayFilterFacto
 
     private final PsfHeadkeyProperties psfHeadkeyProperties;
 
-    private final List<HttpMessageReader<?>> messageReaders;
+    private static final HttpMessageReader messageReader = new DecoderHttpMessageReader<>(new Jackson2JsonDecoder());
+
 
     public PsfSecretReqGatewayFilterFactory(SecretService secretService, PsfHeadkeyProperties psfHeadkeyProperties) {
         this.secretService = secretService;
         this.psfHeadkeyProperties = psfHeadkeyProperties;
-        this.messageReaders = HandlerStrategies.withDefaults().messageReaders();
     }
 
     @Override
@@ -91,43 +86,54 @@ public class PsfSecretReqGatewayFilterFactory extends AbstractGatewayFilterFacto
         }
 
         @Override
-        public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-            return new GatewayFilter() {
-                public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-                    ServerRequest serverRequest = ServerRequest.create(exchange,messageReaders);
-                    Mono<?> modifiedBody = serverRequest.bodyToMono(String.class).flatMap((originalBody) -> {
-                        new RewriteFunction<String,String>(){
+        protected Mono<Void> afterProcess(ServerWebExchange exchange, GatewayFilterChain chain) {
+            return this.decodeReque(exchange, chain);
+        }
 
-                            @Override
-                            public Publisher<String> apply(ServerWebExchange serverWebExchange, String s) {
-                                return null;
-                            }
-                        };
-                        return config.getRewriteFunction().apply(exchange, originalBody);
-                    }).switchIfEmpty(Mono.defer(() -> {
-                        return (Mono)config.getRewriteFunction().apply(exchange, (Object)null);
-                    }));
-                    BodyInserter bodyInserter = BodyInserters.fromPublisher(modifiedBody, config.getOutClass());
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.putAll(exchange.getRequest().getHeaders());
-                    headers.remove("Content-Length");
-                    if (config.getContentType() != null) {
-                        headers.set("Content-Type", config.getContentType());
+        private Mono<Void> decodeReque(final ServerWebExchange exchange, final GatewayFilterChain chain) {
+            ServerHttpRequest request = exchange.getRequest();
+            // mediaType
+            final MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
+            final HttpMethod method = exchange.getRequest().getMethod();
+            Flux<String> modifiedBody = request.getBody().map(dataBuffer -> {
+                byte[] bytes = new byte[dataBuffer.readableByteCount()];
+                dataBuffer.read(bytes);
+                DataBufferUtils.release(dataBuffer);
+                return new String(bytes, StandardCharsets.UTF_8);
+            }).flatMap(body -> {
+                if (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType) && Objects.equals(method, HttpMethod.POST)) {
+                    final String decryptFromString = SecretKeyUtils.decryptFromString(body, exchange.getRequest().getHeaders().getFirst(psfHeadkeyProperties.getAppsecret()));
+                    return Mono.just(decryptFromString);
+                }
+                return Mono.empty();
+            });
+            final BodyInserter bodyInserter = BodyInserters.fromPublisher(modifiedBody, String.class);
+            final HttpHeaders headers = new HttpHeaders();
+            headers.putAll(exchange.getRequest().getHeaders());
+            headers.remove(HttpHeaders.CONTENT_LENGTH);
+            final CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
+            return bodyInserter.insert(outputMessage, new BodyInserterContext()).then(Mono.defer(() -> {
+                final ServerHttpRequestDecorator decorator = new ServerHttpRequestDecorator(exchange.getRequest()) {
+                    @Override
+                    public HttpHeaders getHeaders() {
+                        final long contentLength = headers.getContentLength();
+                        final HttpHeaders httpHeaders = new HttpHeaders();
+                        httpHeaders.putAll(super.getHeaders());
+                        if (contentLength > 0) {
+                            httpHeaders.setContentLength(contentLength);
+                        } else {
+                            httpHeaders.set(HttpHeaders.TRANSFER_ENCODING, "chunked");
+                        }
+                        return httpHeaders;
                     }
 
-                    CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
-                    return bodyInserter.insert(outputMessage, new BodyInserterContext()).then(Mono.defer(() -> {
-                        ServerHttpRequest decorator = ModifyRequestBodyGatewayFilterFactory.this.decorate(exchange, headers, outputMessage);
-                        return chain.filter(exchange.mutate().request(decorator).build());
-                    })).onErrorResume((throwable) -> {
-                        return ModifyRequestBodyGatewayFilterFactory.this.release(exchange, outputMessage, throwable);
-                    });
-                }
-
-                public String toString() {
-                    return GatewayToStringStyler.filterToStringCreator(ModifyRequestBodyGatewayFilterFactory.this).append("Content type", config.getContentType()).append("In class", config.getInClass()).append("Out class", config.getOutClass()).toString();
-                }
-            };
+                    @Override
+                    public Flux<DataBuffer> getBody() {
+                        return outputMessage.getBody();
+                    }
+                };
+                return chain.filter(exchange.mutate().request(decorator).build());
+            }));
         }
     }
 

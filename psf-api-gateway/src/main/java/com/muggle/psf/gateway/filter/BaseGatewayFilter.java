@@ -34,8 +34,18 @@ public abstract class BaseGatewayFilter implements GlobalFilter {
         this.properties = properties;
     }
 
+    /**
+     * 自定义前置
+     * @param exchange
+     */
     public abstract void beforeProcess(ServerWebExchange exchange);
 
+    /**
+     * 对全局配置的路由放行
+     * @param exchange
+     * @param chain
+     * @return
+     */
     @Override
     public Mono<Void> filter(final ServerWebExchange exchange, final GatewayFilterChain chain) {
         try {
@@ -73,5 +83,11 @@ public abstract class BaseGatewayFilter implements GlobalFilter {
         return this.afterProcess(exchange, chain);
     }
 
+    /**
+     * 自定义后置
+     * @param exchange
+     * @param chain
+     * @return
+     */
     protected abstract Mono<Void> afterProcess(ServerWebExchange exchange, GatewayFilterChain chain);
 }
