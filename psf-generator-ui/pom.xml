@@ -57,6 +57,14 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>muggle0-poseidon-real</id>
+            <name>real</name>
+            <url>https://muggle0-maven.pkg.coding.net/repository/poseidon/real/</url>
+        </repository>
+    </distributionManagement>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -69,17 +77,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <distributionManagement>
-        <repository>
-            <id>rdc-releases</id>
-            <url>https://repo.rdc.aliyun.com/repository/135664-release-agaluw/</url>
-        </repository>
-        <snapshotRepository>
-            <id>rdc-snapshots</id>
-            <url>https://repo.rdc.aliyun.com/repository/135664-snapshot-iPvOFe/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 
     <build>
