@@ -61,6 +61,14 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<distributionManagement>
+		<repository>
+			<id>muggle0-poseidon-real</id>
+			<name>real</name>
+			<url>https://muggle0-maven.pkg.coding.net/repository/poseidon/real/</url>
+		</repository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
