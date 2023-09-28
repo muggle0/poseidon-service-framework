@@ -1,4 +1,4 @@
-package com.muggle.psf.common;
+package com.muggle.psf.util;
 
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;

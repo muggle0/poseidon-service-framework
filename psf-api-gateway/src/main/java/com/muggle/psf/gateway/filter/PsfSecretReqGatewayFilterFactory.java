@@ -1,6 +1,6 @@
 package com.muggle.psf.gateway.filter;
 
-import com.muggle.psf.common.SecretKeyUtils;
+import com.muggle.psf.util.SecretKeyUtils;
 import com.muggle.psf.common.exception.GatewayException;
 import com.muggle.psf.gateway.properties.PsfHeadkeyProperties;
 import com.muggle.psf.gateway.service.SecretService;
@@ -105,7 +105,7 @@ public class PsfSecretReqGatewayFilterFactory extends AbstractGatewayFilterFacto
                     final String decryptFromString = SecretKeyUtils.decryptFromString(body, exchange.getRequest().getHeaders().getFirst(psfHeadkeyProperties.getAppsecret()));
                     return Mono.just(decryptFromString);
                 }
-                return Mono.empty();
+                return Mono.just(body);
             });
             final BodyInserter bodyInserter = BodyInserters.fromPublisher(modifiedBody, String.class);
             final HttpHeaders headers = new HttpHeaders();

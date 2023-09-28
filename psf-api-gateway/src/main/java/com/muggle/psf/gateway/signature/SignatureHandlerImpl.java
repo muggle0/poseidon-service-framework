@@ -2,12 +2,12 @@ package com.muggle.psf.gateway.signature;
 
 import com.muggle.psf.common.exception.GatewayException;
 import com.muggle.psf.gateway.service.SecretService;
+import jakarta.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -63,11 +63,18 @@ public class SignatureHandlerImpl implements SignatureHandler {
     }
 
 
+    /**
+     * SHA-256 base64 加密
+     * @param parameter
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
     public static String getSignature(final SignatureParameter parameter) throws NoSuchAlgorithmException {
         final String decondeStr = parameter.getAppId().concat(parameter.getNonce()).concat(parameter.getTimestamp())
             .concat(parameter.getAppSecret());
         final MessageDigest md = MessageDigest.getInstance("SHA-256");
         final byte[] d = md.digest(decondeStr.getBytes(StandardCharsets.UTF_8));
+        // 把byte数组转换成字符串表示的十六进制数据。
         return DatatypeConverter.printHexBinary(d).toUpperCase();
     }
 
