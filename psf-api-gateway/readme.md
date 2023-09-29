@@ -45,3 +45,4 @@ https://blog.csdn.net/fly910905/article/details/121682625
 ## todo
 
 1. 去除数据源自动化配置
+2. 目前jetcache-starter-redis 未有支持 springboot3.x的稳定版本

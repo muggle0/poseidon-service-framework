@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@SpringBootApplication(exclude = RedisAutoConfiguration.class)
+@SpringBootApplication
 @EnableDiscoveryClient
 @EnableCreateCacheAnnotation
 @EnableMethodCache(basePackages = "com.muggle.psf.gateway")
