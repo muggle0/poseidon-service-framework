@@ -1,6 +1,7 @@
 package com.muggle.psf.gateway.config;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
@@ -25,7 +26,7 @@ import java.util.List;
  * Created by muggle
  */
 @Configuration
-@EnableConfigurationProperties({ServerProperties.class, MessageSourceProperties.class})
+@ConditionalOnBean({MessageSourceProperties.class})
 public class ErrorHandlerConfig {
     private final ServerProperties serverProperties;
 
@@ -39,12 +40,7 @@ public class ErrorHandlerConfig {
 
     private final MessageSource messageSource;
 
-    public ErrorHandlerConfig(final ServerProperties serverProperties,
-                              final WebProperties webProperties,
-                              final ObjectProvider<List<ViewResolver>> viewResolversProvider,
-                              final ServerCodecConfigurer serverCodecConfigurer,
-                              final ApplicationContext applicationContext,
-                              final MessageSource messageSource) {
+    public ErrorHandlerConfig(final ServerProperties serverProperties, final WebProperties webProperties, final ObjectProvider<List<ViewResolver>> viewResolversProvider, final ServerCodecConfigurer serverCodecConfigurer, final ApplicationContext applicationContext, final MessageSource messageSource) {
         this.serverProperties = serverProperties;
         this.applicationContext = applicationContext;
         this.resourceProperties = webProperties.getResources();
@@ -56,11 +52,7 @@ public class ErrorHandlerConfig {
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public ErrorWebExceptionHandler errorWebExceptionHandler(final ErrorAttributes errorAttributes) {
-        final PsfErrorWebExceptionHandler exceptionHandler = new PsfErrorWebExceptionHandler(
-            errorAttributes,
-            this.resourceProperties,
-            this.serverProperties.getError(),
-            this.applicationContext, messageSource);
+        final PsfErrorWebExceptionHandler exceptionHandler = new PsfErrorWebExceptionHandler(errorAttributes, this.resourceProperties, this.serverProperties.getError(), this.applicationContext, messageSource);
         exceptionHandler.setViewResolvers(this.viewResolvers);
         exceptionHandler.setMessageWriters(this.serverCodecConfigurer.getWriters());
         exceptionHandler.setMessageReaders(this.serverCodecConfigurer.getReaders());
