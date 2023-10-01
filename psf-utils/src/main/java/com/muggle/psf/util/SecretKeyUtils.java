@@ -29,6 +29,12 @@ public class SecretKeyUtils {
         return encrypt;
     }
 
+    /**
+     * ASE 解密
+     * @param data
+     * @param key
+     * @return
+     */
     public static String decryptFromString(final String data, String key) {
         if (StringUtils.isEmpty(key)) {
             return data;
@@ -37,7 +43,6 @@ public class SecretKeyUtils {
             key = key.concat(keypading);
         }
         final AES aes = new AES(Mode.ECB, Padding.PKCS5Padding, key.substring(0, 16).getBytes(StandardCharsets.UTF_8));
-        // 加密并进行Base转码
         final String decryptStr = aes.decryptStr(data);
         return decryptStr;
     }

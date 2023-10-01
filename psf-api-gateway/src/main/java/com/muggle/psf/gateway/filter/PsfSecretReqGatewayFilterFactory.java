@@ -79,10 +79,10 @@ public class PsfSecretReqGatewayFilterFactory extends AbstractGatewayFilterFacto
             if (StringUtils.isEmpty(secret) || StringUtils.isEmpty(appip) || StringUtils.isEmpty(nonce)) {
                 throw new GatewayException("网关凭证错误");
             }
-            final String secertByAppId = secretService.getSecertByAppId(appip, nonce);
+            /*final String secertByAppId = secretService.getSecertByAppId(appip, nonce);
             if (!Objects.equals(secertByAppId, secret)) {
                 throw new GatewayException("网关凭证错误");
-            }
+            }*/
         }
 
         @Override

@@ -1,6 +1,7 @@
 GET http://localhost:8080/index.html
 
 ###
+< test.js
 POST http://localhost:8081/test/test
 x-nonce: psf
 signature: D032BF43EE40BF289A1A4263554F9EFE5CCC0B9E46DADF91C20DF28D0F29259F
@@ -8,6 +9,8 @@ timestamp: 1686811165
 appId: poseiodon
 appSecret: e27ac5cb-3ea6-43dd-8c02-d05fe0a2ecb6
 Content-Type: application/json
+
+{{testvar}}
 
 
 ###
